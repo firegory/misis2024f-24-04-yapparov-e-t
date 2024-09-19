@@ -1,12 +1,9 @@
-﻿#include <vector>
-#include <iostream>
-#include <cmath>
+﻿#include <iostream>
 #include <string>
 
 int main() {
-    using namespace std;
-    string s = "";
-    cin >> s;
+    std::string s = "";
+    std::cin >> s;
     bool a = false;
     int const l = s.length();
     for (int i = 1; i < l / 2 + l % 2; i++)
@@ -24,10 +21,10 @@ int main() {
             }
             if (a)
             {
-                cout << "YES\n";
+                std::cout << "YES\n";
                 for (int j = i; j < l; j++)
                 {
-                    cout << s[j];
+                    std::cout << s[j];
                 }
                 break;
             }
@@ -35,6 +32,6 @@ int main() {
     }
     if (!a)
     {
-        cout << "NO";
+        std::cout << "NO";
     }
 }

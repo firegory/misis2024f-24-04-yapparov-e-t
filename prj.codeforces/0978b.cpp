@@ -1,14 +1,11 @@
-﻿#include <vector>
-#include <iostream>
-#include <cmath>
+﻿#include <iostream>
 #include <string>
 
 int main() {
-    using namespace std;
     int n = 0;
-    cin >> n;
-    string s = "";
-    cin >> s;
+    std::cin >> n;
+    std::string s = "";
+    std::cin >> s;
     int countX = 0;
     int answ = 0;
     for (int i = 0; i < n; i++) {
@@ -25,5 +22,5 @@ int main() {
             countX = 0;
         }
     }
-    cout << answ;
+    std::cout << answ;
 }

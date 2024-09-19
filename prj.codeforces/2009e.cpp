@@ -1,12 +1,9 @@
-﻿#include <vector>
-#include <iostream>
+﻿#include <iostream>
 #include <cmath>
-#include <string>
 
 int main() {
-    using namespace std;
     int n = 0;
-    cin >> n;
+    std::cin >> n;
     long long len = 0;
     long long n0 = 0;
     long long min = 0;
@@ -15,7 +12,7 @@ int main() {
     int temp;
     for (int i = 0; i < n; i++)
     {
-        cin >> len >> n0;
+        std::cin >> len >> n0;
         min = ULONG_MAX;
         k = len / 2 + len % 2;
         for (int j = 2; j < ceil(log2(len)) + 2; j++)
@@ -46,6 +43,6 @@ int main() {
                 min = num;
             }
         }
-        cout << min << "\n";
+        std::cout << min << "\n";
     }
 }

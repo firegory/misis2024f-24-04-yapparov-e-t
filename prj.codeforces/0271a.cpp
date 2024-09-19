@@ -8,8 +8,8 @@ int main()
 {
 	int m = 0;
 	std::cin >> m;
-	int l[4] = {};
-	bool a;
+	int l[4] = {0};
+	bool a = true;
 	for (int i = m + 1; i < 9999; i++)
 	{
 		l[0] = i / 1000;

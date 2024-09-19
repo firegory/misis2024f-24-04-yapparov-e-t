@@ -1,15 +1,13 @@
 ﻿#include <vector>
 #include <iostream>
-#include <cmath>
 
 int main() {
-    using namespace std;
-    vector<int> v;
+    std::vector<int> v;
     int n = 0;
     int num = 0;
-    cin >> n;
+    std::cin >> n;
     for (int i = 0; i < n; i++) {
-        cin >> num;
+        std::cin >> num;
         for (int j = 0; j < v.size(); j++) {
             if (num == v[j]) {
                 v.erase(v.begin() + j);
@@ -18,9 +16,9 @@ int main() {
         }
         v.push_back(num);
     }
-    cout << v.size() << "\n";
+    std::cout << v.size() << "\n";
     for (int i = 0; i < v.size(); i++) {
-        cout << v[i] << " ";
+        std::cout << v[i] << " ";
 
     }
 }
