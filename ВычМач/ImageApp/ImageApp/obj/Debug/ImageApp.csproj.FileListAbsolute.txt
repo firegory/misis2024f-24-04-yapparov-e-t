@@ -8,3 +8,13 @@ C:\Users\Light Flight PC\source\repos\ImageApp\ImageApp\obj\Debug\ImageApp.cspro
 C:\Users\Light Flight PC\source\repos\ImageApp\ImageApp\obj\Debug\ImageApp.csproj.CoreCompileInputs.cache
 C:\Users\Light Flight PC\source\repos\ImageApp\ImageApp\obj\Debug\ImageApp.exe
 C:\Users\Light Flight PC\source\repos\ImageApp\ImageApp\obj\Debug\ImageApp.pdb
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.exe.config
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.exe
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.pdb
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.csproj.AssemblyReference.cache
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.Form1.resources
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.Properties.Resources.resources
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.csproj.GenerateResource.cache
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.csproj.CoreCompileInputs.cache
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.exe
+C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.pdb
