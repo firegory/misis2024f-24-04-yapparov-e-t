@@ -69,19 +69,30 @@ namespace ImageApp
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            short[,,] mas = readIm(textBox1.Text);
-            //showImage(mas);
-            saveImage(mas, "");
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = "C:\\Users\\Light Flight PC\\Pictures\\Screenshots";
+            openFileDialog.RestoreDirectory = true;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                string path = openFileDialog.FileName;
+                short[,,] mas = readIm(path);
+                saveImage(mas);
+            }
+            else
+            {
+                MessageBox.Show("A loading error occured");
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            showImage(decodeImageStandart(openFile(textBox1.Text)));
+            showImage(decodeImageBetter(openFile()));
         }
         private short[,,] readIm(string path)
         {
             try
             {
-                Bitmap image1 = new Bitmap(textBox1.Text, true);
+                Bitmap image1 = new Bitmap(path, true);
 
                 int x, y;
                 short[,,] mas = new short[image1.Width, image1.Height, 3];
@@ -119,10 +130,9 @@ namespace ImageApp
             }
             pictureBox1.Image = image1;
 
-}
-        private byte[] saveImage(short[,,] masT, string name)
+        }
+        private byte[] saveImage(short[,,] masT)
         {
-            List<int> colorsT = new List<int>();
             int x, y;
             int[,] mas = new int[masT.GetLength(0), masT.GetLength(1)];
             for (x = 0; x < masT.GetLength(0); x++)//Перевод в одно число вместо трех
@@ -132,39 +142,25 @@ namespace ImageApp
                     mas[x, y] = masT[x, y, 0] * 65536 + masT[x, y, 1] * 256 + masT[x, y, 2];
                 }
             }
-            for (x = 0; x < mas.GetLength(0); x++)//Поиск всех уникальных цветов
+
+            bool[] allColors = new bool[16777216];//2**24
+            List<int> colors = new List<int>();
+
+            for (x = 0; x < mas.GetLength(0); x++)//Запись всех уникальных цветов
             {
                 for (y = 0; y < mas.GetLength(1); y++)
                 {
-                    if (colorsT.IndexOf(mas[x, y]) == -1)
-                    {
-                        colorsT.Add(mas[x, y]);
-                    }
+                    allColors[mas[x, y]] = true;
                 }
             }
-
-
-            int len = colorsT.Count();
-            label1.Text = len + "colors proceeded";
-            int min;
-            int ind;
-            List<int> colors = new List<int>();
-            for (int i = 0; i < len; i++)//Сортировка от меньшего к большему
+            for (int i = 0; i < allColors.Length; i++)
             {
-                min = int.MaxValue;
-                foreach (int item in colorsT)
+                if (allColors[i])
                 {
-                    if (item < min)
-                    {
-                        min = item;
-                    }
+                    colors.Add(i);
                 }
-                ind = colorsT.IndexOf(min);
-                colors.Add(colorsT[ind]);
-                colorsT.RemoveAt(ind);
             }
-            label1.Text = "Colors have been sorted";
-            byte[] im = encodeImageStandart(mas, colors);
+            byte[] im = encodeImageBetter(mas, colors);
             saveAs(im);
             return (im);
         }
@@ -211,6 +207,72 @@ namespace ImageApp
             label1.Text = "Image icoded. Fyle weight: " + image.Length + " bytes";
             return image;
         }
+        private byte[] encodeImageBetter(int[,] mas, List<int> colors)
+        {
+            int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
+
+            int fyleLength =
+            24 + //Байты, отведенные под количество кодируемых цветов
+            16 * 2 +//Байты, отведенные под ширину и высоту
+            24 * colors.Count();//Байты, отведенные под расшивровку цветов
+
+            int counter = 0;
+            for (int x = 0; x < mas.GetLength(0) * mas.GetLength(1) - 1; x++)//Байты под пиксели
+            {
+                counter += 1;
+                if (counter == 255 || mas[(x + 1) / mas.GetLength(1), (x + 1) % mas.GetLength(1)] != mas[x / mas.GetLength(1), x % mas.GetLength(1)])
+                {
+                    fyleLength += 8;
+                    fyleLength += pixelWeight;
+                    counter = 0;
+                }
+            }
+            fyleLength += 8;
+            fyleLength += pixelWeight;
+
+
+            byte[] image = new byte[fyleLength];
+            int index = 0;
+
+
+            insert(ref image, index, toNeededLength(colors.Count(), 24));//Байты, отведенные под количество кодируемых цветов
+            index += 24;
+
+            insert(ref image, index, toNeededLength(mas.GetLength(0), 16));//Байты, отведенные под ширину и высоту
+            index += 16;
+            insert(ref image, index, toNeededLength(mas.GetLength(1), 16));
+            index += 16;
+
+
+            for (int i = 0; i < colors.Count(); i++)//Байты, отведенные под расшивровку цветов
+            {
+                insert(ref image, index, toNeededLength(colors[i], 24));
+                index += 24;
+            }
+
+
+            counter = 0;
+            for (int x = 0; x < mas.GetLength(0) * mas.GetLength(1) - 1; x++)//Байты под пиксели
+            {
+                counter += 1;
+                if (counter == 255 || mas[(x + 1) / mas.GetLength(1), (x + 1) % mas.GetLength(1)] != mas[x / mas.GetLength(1), x % mas.GetLength(1)])
+                {
+                    insert(ref image, index, toNeededLength(counter, 8));
+                    index += 8;
+                    insert(ref image, index, toNeededLength(colors.IndexOf(mas[x / mas.GetLength(1), x % mas.GetLength(1)]), pixelWeight));
+                    index += pixelWeight;
+                    counter = 0;
+                }
+            }
+            counter += 1;
+            insert(ref image, index, toNeededLength(counter, 8));
+            index += 8;
+            insert(ref image, index, toNeededLength(colors.IndexOf(mas[mas.GetLength(0)-1, mas.GetLength(1)-1]), pixelWeight));
+            index += pixelWeight;
+
+            label1.Text = "Image incoded. Fyle weight: " + image.Length + " bytes" + index;
+            return image;
+        }
         private short[,,] decodeImageStandart(byte[] mas)
         {
             int ind = 0;
@@ -223,7 +285,7 @@ namespace ImageApp
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
 
-short[,] colors = new short[colorsNumber, 3];
+            short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
                 colors[i, 0] = (short)getFromNeededLength(mas, ind, 8);
@@ -248,6 +310,53 @@ short[,] colors = new short[colorsNumber, 3];
                     image[x, y, 0] = colors[colorInd, 0];
                     image[x, y, 1] = colors[colorInd, 1];
                     image[x, y, 2] = colors[colorInd, 2];
+                }
+            }
+            return image;
+        }
+        private short[,,] decodeImageBetter(byte[] mas)
+        {
+            int ind = 0;
+
+            int colorsNumber = getFromNeededLength(mas, ind, 24);
+            ind += 24;
+
+            int width = getFromNeededLength(mas, ind, 16);
+            ind += 16;
+            int height = getFromNeededLength(mas, ind, 16);
+            ind += 16;
+
+            short[,] colors = new short[colorsNumber, 3];
+            for (int i = 0; i < colorsNumber; i++)
+            {
+                colors[i, 0] = (short)getFromNeededLength(mas, ind, 8);
+                ind += 8;
+                colors[i, 1] = (short)getFromNeededLength(mas, ind, 8);
+                ind += 8;
+                colors[i, 2] = (short)getFromNeededLength(mas, ind, 8);
+                ind += 8;
+            }
+
+            short[,,] image = new short[width, height, 3];
+            int colorInd = 0;
+            int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colorsNumber, 2)));
+
+            int counter = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (counter == 0)
+                    {
+                        counter = getFromNeededLength(mas, ind, 8);
+                        ind += 8;
+                        colorInd = getFromNeededLength(mas, ind, pixelWeight);
+                        ind += pixelWeight;
+                    }
+                    image[x, y, 0] = colors[colorInd, 0];
+                    image[x, y, 1] = colors[colorInd, 1];
+                    image[x, y, 2] = colors[colorInd, 2];
+                    counter -= 1;
                 }
             }
             return image;
@@ -279,7 +388,7 @@ short[,] colors = new short[colorsNumber, 3];
             bf.Serialize(fs, im);
             fs.Close();
         }
-        public static byte[] openFile(string path)
+        public byte[] openFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = "C:\\Users\\fireg\\OneDrive\\Рабочий стол\\работа\\git\\-misis2024f-24-04-yapparov-e-t\\ВычМач\\ImageApp\\images";
@@ -290,7 +399,7 @@ short[,] colors = new short[colorsNumber, 3];
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 //Get the path of specified file
-                path = openFileDialog.FileName;
+                string path = openFileDialog.FileName;
                 return ReadFromBinaryFile(path);
             }
             MessageBox.Show("A loading error occured");
@@ -304,7 +413,6 @@ short[,] colors = new short[colorsNumber, 3];
             fs.Close();
             return im;
         }
-
 
     }
 }
