@@ -18,3 +18,4 @@ C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМа�
 C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.exe.config
 C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.exe
 C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМач\ImageApp\ImageApp\bin\Debug\ImageApp.pdb
+C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.Form2.resources

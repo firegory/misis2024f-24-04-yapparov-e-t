@@ -77,12 +77,60 @@ namespace ImageApp
                 //Get the path of specified file
                 string path = openFileDialog.FileName;
                 short[,,] mas = readIm(path);
-                saveImage(mas);
+                saveImage(mas, 1);
             }
             else
             {
                 MessageBox.Show("A loading error occured");
             }
+        }
+        private void getStats()
+        {
+            Point[] png = new Point[296];
+            Point[] normal = new Point[296];
+            Point[] better = new Point[296];
+            png[0].X = 1;
+            png[0].Y = 1;
+            normal[0].X = 1;
+            normal[0].Y = 1;
+            better[0].X = 1;
+            better[0].Y = 1;
+            short[,,] tempImg;
+            int[] length;
+            for (int i = 1; i < png.Length; i++)
+            {
+                tempImg = readIm("C:\\Users\\Light Flight PC\\Desktop\\work\\-misis2024f-24-00-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png");
+                png[i].X = tempImg.GetLength(0) * tempImg.GetLength(1);
+                normal[i].X = png[i].X;
+                better[i].X = png[i].X;
+                png[i].Y = (int)new System.IO.FileInfo("C:\\Users\\Light Flight PC\\Desktop\\work\\-misis2024f-24-00-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png").Length;
+                length = saveImage(tempImg, 3);
+                normal[i].Y = length[0];
+                better[i].Y = length[1];
+
+            }
+            Point temp;
+            for (int write = 0; write < png.Length; write++)
+            {
+                for (int sort = 0; sort < png.Length - 1; sort++)
+                {
+                    if (png[sort].X > png[sort + 1].X)
+                    {
+                        temp = png[sort + 1];
+                        png[sort + 1] = png[sort];
+                        png[sort] = temp;
+                        temp = normal[sort + 1];
+                        normal[sort + 1] = normal[sort];
+                        normal[sort] = temp;
+                        temp = better[sort + 1];
+                        better[sort + 1] = better[sort];
+                        better[sort] = temp;
+                    }
+                }
+            }
+            Form2 f2 = new Form2();
+            f2.Show();
+            f2.f2Show(png, normal, better);
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -131,7 +179,7 @@ namespace ImageApp
             pictureBox1.Image = image1;
 
         }
-        private byte[] saveImage(short[,,] masT)
+        private int[] saveImage(short[,,] masT, int state)
         {
             int x, y;
             int[,] mas = new int[masT.GetLength(0), masT.GetLength(1)];
@@ -160,11 +208,27 @@ namespace ImageApp
                     colors.Add(i);
                 }
             }
-            byte[] im = encodeImageBetter(mas, colors);
-            saveAs(im);
-            return (im);
+            byte[] im;
+            if (state == 1)
+            {
+                im = encodeImageBetter(mas, colors);
+                saveAs(im);
+            }
+            else if(state == 2)
+            {
+                im = encodeImageStandart(mas, colors);
+                saveAs(im);
+            }
+            else if(state == 3)
+            {
+                int[] lengths = new int[2];
+                lengths[0] = getLengthStandart(mas, colors);
+                lengths[1] = getLengthBetter(mas, colors);
+                return lengths;
+            }
+            return (null);
         }
-        private byte[] encodeImageStandart(int[,] mas, List<int> colors)
+        private int getLengthStandart(int[,] mas, List<int> colors)
         {
             int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
 
@@ -173,6 +237,14 @@ namespace ImageApp
             16 * 2 +//Байты, отведенные под ширину и высоту
             24 * colors.Count() +//Байты, отведенные под расшивровку цветов
             pixelWeight * mas.GetLength(0) * mas.GetLength(1);//Байты под пиксели
+
+            return fyleLength;
+        }
+        private byte[] encodeImageStandart(int[,] mas, List<int> colors)
+        {
+            int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
+
+            int fyleLength = getLengthStandart(mas, colors);
             byte[] image = new byte[fyleLength];
             int index = 0;
 
@@ -192,8 +264,6 @@ namespace ImageApp
                 index += 24;
             }
 
-
-
             int x, y;
             for (x = 0; x < mas.GetLength(0); x++)//Байты под пиксели
             {
@@ -204,10 +274,10 @@ namespace ImageApp
                 }
             }
 
-            label1.Text = "Image icoded. Fyle weight: " + image.Length + " bytes";
+            label1.Text = "Image ecoded. File weight: " + image.Length + " bytes";
             return image;
         }
-        private byte[] encodeImageBetter(int[,] mas, List<int> colors)
+        private int getLengthBetter(int[,] mas, List<int> colors)
         {
             int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
 
@@ -230,6 +300,14 @@ namespace ImageApp
             fyleLength += 8;
             fyleLength += pixelWeight;
 
+            return fyleLength;
+        }
+        private byte[] encodeImageBetter(int[,] mas, List<int> colors)
+        {
+            int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
+
+            int fyleLength = getLengthBetter(mas, colors);
+
 
             byte[] image = new byte[fyleLength];
             int index = 0;
@@ -251,7 +329,7 @@ namespace ImageApp
             }
 
 
-            counter = 0;
+            int counter = 0;
             for (int x = 0; x < mas.GetLength(0) * mas.GetLength(1) - 1; x++)//Байты под пиксели
             {
                 counter += 1;
@@ -270,7 +348,7 @@ namespace ImageApp
             insert(ref image, index, toNeededLength(colors.IndexOf(mas[mas.GetLength(0)-1, mas.GetLength(1)-1]), pixelWeight));
             index += pixelWeight;
 
-            label1.Text = "Image incoded. Fyle weight: " + image.Length + " bytes" + index;
+            label1.Text = "Image incoded. File weight: " + image.Length + " bytes";
             return image;
         }
         private short[,,] decodeImageStandart(byte[] mas)
@@ -414,5 +492,9 @@ namespace ImageApp
             return im;
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            getStats();
+        }
     }
 }
