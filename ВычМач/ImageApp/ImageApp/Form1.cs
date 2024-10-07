@@ -77,7 +77,7 @@ namespace ImageApp
                 //Get the path of specified file
                 string path = openFileDialog.FileName;
                 short[,,] mas = readIm(path);
-                saveImage(mas, 1);
+                saveImage(mas, 2);
             }
             else
             {
@@ -134,7 +134,7 @@ namespace ImageApp
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            showImage(decodeImageBetter(openFile()));
+            showImage(decodeImageStandart(openFile()));
         }
         private short[,,] readIm(string path)
         {
@@ -363,6 +363,7 @@ namespace ImageApp
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
 
+            mas = checkStandart(makeMoreSafeStandart(mas));
             short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
@@ -385,6 +386,10 @@ namespace ImageApp
                 {
                     colorInd = getFromNeededLength(mas, ind, pixelWeight);
                     ind += pixelWeight;
+                    if (colorInd >= colorsNumber)
+                    {
+                        colorInd = 0;
+                    }
                     image[x, y, 0] = colors[colorInd, 0];
                     image[x, y, 1] = colors[colorInd, 1];
                     image[x, y, 2] = colors[colorInd, 2];
@@ -403,7 +408,7 @@ namespace ImageApp
             ind += 16;
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
-
+            makeMistakes(ref mas);
             short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
@@ -414,7 +419,6 @@ namespace ImageApp
                 colors[i, 2] = (short)getFromNeededLength(mas, ind, 8);
                 ind += 8;
             }
-
             short[,,] image = new short[width, height, 3];
             int colorInd = 0;
             int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colorsNumber, 2)));
@@ -430,6 +434,10 @@ namespace ImageApp
                         ind += 8;
                         colorInd = getFromNeededLength(mas, ind, pixelWeight);
                         ind += pixelWeight;
+                    }
+                    if (colorInd >= colorsNumber)
+                    {
+                        colorInd = 0;
                     }
                     image[x, y, 0] = colors[colorInd, 0];
                     image[x, y, 1] = colors[colorInd, 1];
@@ -496,5 +504,113 @@ namespace ImageApp
         {
             getStats();
         }
+
+
+        private byte[] makeMistakes(byte[] mas)
+        {
+            var rand = new Random();
+            for (int i = 0; i < mas.Length; i++)
+            {
+                if (rand.Next(11) == 0)
+                {
+                    if (mas[i] == 0)
+                    {
+                        mas[i] = 1;
+                    }
+                    else
+                    {
+                        mas[i] = 0;
+                    }
+                }
+            }
+            return mas;
+        }
+        private void makeMistakes(ref byte[] mas)
+        {
+            var rand = new Random();
+            for (int i = 0; i < mas.Length; i++)
+            {
+                if (rand.Next(11) == 0)
+                {
+                    if (mas[i] == 0)
+                    {
+                        mas[i] = 1;
+                    }
+                    else
+                    {
+                        mas[i] = 0;
+                    }
+                }
+            }
+        }
+
+        private byte[] makeMoreSafeStandart(byte[] mas)
+        {
+            short num = 0;
+            int len = mas.Length + mas.Length / 8;
+            if (mas.Length%8 != 0)
+            {
+                len += 9 - mas.Length % 8;
+            }
+            byte[] mas1 = new byte[len];
+            for (int i = 0; i < mas.Length; i++)
+            {
+                num += mas[i];
+                mas1[i + i / 8] = mas[i];
+                if ((i+1)%8 == 0 && i != 0)
+                {
+                    mas1[i + (i+1) / 8] = (byte)(num % 2);
+                    num = 0;
+                }
+
+            }
+            for (int i = 0; i < mas1.Length - mas.Length; i++)
+            {
+                mas1[mas1.Length - i - 1] = 0;
+            }
+            mas1[mas1.Length - 1] = (byte)(num % 2);
+            return mas1;
+        }
+        private byte[] checkStandart(byte[] mas)
+        {
+            byte[] mas1 = new byte[mas.Length*8/9];
+            short num = 0;
+            byte[] tmas = new byte[9];
+            for (int i = 0; i < mas.Length/9; i+=1)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    tmas[j] = mas[i*9 + j];
+                }
+                makeMistakes(ref tmas);
+                num = -1;
+                while (num%2 != tmas[8])
+                {
+                    num = 0;
+                    for (int j = 0; j < 8; j++)
+                    {
+                        num += tmas[j];
+                    }
+                    if (num % 2 != tmas[8])
+                    {
+                        for (int j = 0; j < 9; j++)
+                        {
+                            tmas[j] = mas[i*9 + j];
+                        }
+                        makeMistakes(ref tmas);
+                    }
+                    if (i%1000 == 0)
+                    {
+                        //MessageBox.Show(num + " " + i);
+                    }
+                }
+                for (int j = 0; j < 8; j++)
+                {
+                    mas1[i * 8 + j] = tmas[j];
+                }
+            }
+            return mas1;
+        }
+
     }
 }
