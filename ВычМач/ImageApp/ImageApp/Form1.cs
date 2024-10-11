@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +16,7 @@ namespace ImageApp
 {
     public partial class Form1 : Form
     {
-        private byte[] toNeededLength(byte[] mas, int l)
+        private BitArray toNeededLength(BitArray mas, int l)
         {
             if (mas.Length == l)
             {
@@ -23,7 +24,7 @@ namespace ImageApp
             }
             else
             {
-                byte[] mas1 = new byte[l];
+                BitArray mas1 = new BitArray(l);
                 for (int i = 0; i < l; i++)
                 {
                     if (mas.Length - l + i >= 0)
@@ -32,31 +33,31 @@ namespace ImageApp
                     }
                     else
                     {
-                        mas1[i] = 0;
+                        mas1[i] = false;
                     }
                 }
                 return mas1;
             }
         }
-        private byte[] toNeededLength(int n, int l)
+        private BitArray toNeededLength(int n, int l)
         {
-            byte[] mas = new byte[l];
+            BitArray mas = new BitArray(l);
             for (int i = 0; i < l; i++)
             {
-                mas[l - i - 1] = Convert.ToByte(Math.Floor(n / Math.Pow(2, i)) % 2);
+                mas[l - i - 1] = Convert.ToBoolean(Math.Floor(n / Math.Pow(2, i)) % 2);
             }
             return mas;
         }
-        private int getFromNeededLength(byte[] mas, int ind, int l)
+        private int getFromNeededLength(BitArray mas, int ind, int l)
         {
             int n = 0;
             for (int i = 0; i < l; i++)
             {
-                n += mas[ind + i] * Convert.ToInt32(Math.Pow(2, l - i - 1));
+                n += Convert.ToInt32(mas[ind + i]) * Convert.ToInt32(Math.Pow(2, l - i - 1));
             }
             return n;
         }
-        private void insert(ref byte[] mas, int ind, byte[] mas1)
+        private void insert(ref BitArray mas, int ind, BitArray mas1)
         {
             for (int i = 0; i < mas1.Length; i++)
             {
@@ -99,11 +100,11 @@ namespace ImageApp
             int[] length;
             for (int i = 1; i < png.Length; i++)
             {
-                tempImg = readIm("C:\\Users\\Light Flight PC\\Desktop\\work\\-misis2024f-24-00-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png");
+                tempImg = readIm("C:\\Users\\fireg\\OneDrive\\Рабочий стол\\работа\\git\\-misis2024f-24-04-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png");
                 png[i].X = tempImg.GetLength(0) * tempImg.GetLength(1);
                 normal[i].X = png[i].X;
                 better[i].X = png[i].X;
-                png[i].Y = (int)new System.IO.FileInfo("C:\\Users\\Light Flight PC\\Desktop\\work\\-misis2024f-24-00-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png").Length;
+                png[i].Y = (int)new System.IO.FileInfo("C:\\Users\\fireg\\OneDrive\\Рабочий стол\\работа\\git\\-misis2024f-24-04-yapparov-e-t\\ВычМач\\ImageApp\\images\\2 (" + i + ").png").Length;
                 length = saveImage(tempImg, 3);
                 normal[i].Y = length[0];
                 better[i].Y = length[1];
@@ -208,7 +209,7 @@ namespace ImageApp
                     colors.Add(i);
                 }
             }
-            byte[] im;
+            BitArray im;
             if (state == 1)
             {
                 im = encodeImageBetter(mas, colors);
@@ -240,12 +241,12 @@ namespace ImageApp
 
             return fyleLength;
         }
-        private byte[] encodeImageStandart(int[,] mas, List<int> colors)
+        private BitArray encodeImageStandart(int[,] mas, List<int> colors)
         {
             int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
 
             int fyleLength = getLengthStandart(mas, colors);
-            byte[] image = new byte[fyleLength];
+            BitArray image = new BitArray(fyleLength);
             int index = 0;
 
 
@@ -274,7 +275,7 @@ namespace ImageApp
                 }
             }
 
-            label1.Text = "Image ecoded. File weight: " + image.Length + " bytes";
+            label1.Text = "Image ecoded. File weight: " + image.Length + " bits";
             return image;
         }
         private int getLengthBetter(int[,] mas, List<int> colors)
@@ -302,14 +303,14 @@ namespace ImageApp
 
             return fyleLength;
         }
-        private byte[] encodeImageBetter(int[,] mas, List<int> colors)
+        private BitArray encodeImageBetter(int[,] mas, List<int> colors)
         {
             int pixelWeight = Convert.ToInt32(Math.Ceiling(Math.Log(colors.Count(), 2)));
 
             int fyleLength = getLengthBetter(mas, colors);
 
 
-            byte[] image = new byte[fyleLength];
+            BitArray image = new BitArray(fyleLength);
             int index = 0;
 
 
@@ -348,10 +349,10 @@ namespace ImageApp
             insert(ref image, index, toNeededLength(colors.IndexOf(mas[mas.GetLength(0)-1, mas.GetLength(1)-1]), pixelWeight));
             index += pixelWeight;
 
-            label1.Text = "Image incoded. File weight: " + image.Length + " bytes";
+            label1.Text = "Image incoded. File weight: " + image.Length + " bits";
             return image;
         }
-        private short[,,] decodeImageStandart(byte[] mas)
+        private short[,,] decodeImageStandart(BitArray mas)
         {
             int ind = 0;
 
@@ -363,7 +364,8 @@ namespace ImageApp
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
 
-            mas = checkStandart(makeMoreSafeStandart(mas));
+            //mas = checkStandart(makeMoreSafeStandart(mas), 100);
+            //makeMistakes(ref mas, 10);
             short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
@@ -397,7 +399,7 @@ namespace ImageApp
             }
             return image;
         }
-        private short[,,] decodeImageBetter(byte[] mas)
+        private short[,,] decodeImageBetter(BitArray mas)
         {
             int ind = 0;
 
@@ -408,7 +410,6 @@ namespace ImageApp
             ind += 16;
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
-            makeMistakes(ref mas);
             short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
@@ -447,7 +448,7 @@ namespace ImageApp
             }
             return image;
         }
-        private void saveAs(byte[] im)
+        private void saveAs(BitArray im)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = "C:\\Users\\fireg\\OneDrive\\Рабочий стол\\работа\\git\\-misis2024f-24-04-yapparov-e-t\\ВычМач\\ImageApp\\images";
@@ -467,14 +468,14 @@ namespace ImageApp
                 MessageBox.Show("A saving error occured");
             }
         }
-        private void WriteToBinaryFile(byte[] im, string path)
+        private void WriteToBinaryFile(BitArray im, string path)
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
             bf.Serialize(fs, im);
             fs.Close();
         }
-        public byte[] openFile()
+        public BitArray openFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = "C:\\Users\\fireg\\OneDrive\\Рабочий стол\\работа\\git\\-misis2024f-24-04-yapparov-e-t\\ВычМач\\ImageApp\\images";
@@ -491,11 +492,11 @@ namespace ImageApp
             MessageBox.Show("A loading error occured");
             return null;
         }
-        public static byte[] ReadFromBinaryFile(string path)
+        public static BitArray ReadFromBinaryFile(string path)
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            byte[] im = (byte[])bf.Deserialize(fs);
+            BitArray im = (BitArray)bf.Deserialize(fs);
             fs.Close();
             return im;
         }
@@ -506,102 +507,104 @@ namespace ImageApp
         }
 
 
-        private byte[] makeMistakes(byte[] mas)
+        private BitArray makeMistakes(BitArray mas, int prop)
+        {
+            var rand = new Random();
+            BitArray mas1 = new BitArray(mas.Length);
+            for (int i = 0; i < mas.Length; i++)
+            {
+                if (rand.Next(prop) == 0)
+                {
+                    mas1[i] = !mas[i];
+                }
+                else
+                {
+                    mas1[i] = mas[i];
+                }
+            }
+            return mas1;
+        }
+        private void makeMistakes(ref BitArray mas, int prop)
         {
             var rand = new Random();
             for (int i = 0; i < mas.Length; i++)
             {
-                if (rand.Next(11) == 0)
+                if (rand.Next(prop) == 0)
                 {
-                    if (mas[i] == 0)
-                    {
-                        mas[i] = 1;
-                    }
-                    else
-                    {
-                        mas[i] = 0;
-                    }
+                    mas[i] = !mas[i];
                 }
             }
-            return mas;
         }
-        private void makeMistakes(ref byte[] mas)
+        private int compare(BitArray mas1, BitArray mas2)
         {
-            var rand = new Random();
-            for (int i = 0; i < mas.Length; i++)
+            int n = 0;
+            for (int i = 0; i < mas1.Length; i++)
             {
-                if (rand.Next(11) == 0)
+                if (mas1[i] != mas2[i])
                 {
-                    if (mas[i] == 0)
-                    {
-                        mas[i] = 1;
-                    }
-                    else
-                    {
-                        mas[i] = 0;
-                    }
+                    n++;
                 }
             }
+            return n;
         }
-
-        private byte[] makeMoreSafeStandart(byte[] mas)
+        private BitArray makeMoreSafeStandart(BitArray mas)
         {
-            short num = 0;
+            int num = 0;
             int len = mas.Length + mas.Length / 8;
             if (mas.Length%8 != 0)
             {
                 len += 9 - mas.Length % 8;
             }
-            byte[] mas1 = new byte[len];
+            BitArray mas1 = new BitArray(len);
             for (int i = 0; i < mas.Length; i++)
             {
-                num += mas[i];
+                num += Convert.ToInt32(mas[i]);
                 mas1[i + i / 8] = mas[i];
                 if ((i+1)%8 == 0 && i != 0)
                 {
-                    mas1[i + (i+1) / 8] = (byte)(num % 2);
+                    mas1[i + (i+1) / 8] = Convert.ToBoolean(num % 2);
                     num = 0;
                 }
 
             }
-            for (int i = 0; i < mas1.Length - mas.Length; i++)
+            if (mas.Length%9 != 0)
             {
-                mas1[mas1.Length - i - 1] = 0;
+                for (int i = 0; i < 9 - mas.Length%9; i++)
+                {
+                    mas1[mas1.Length - i - 1] = false;
+                }
             }
-            mas1[mas1.Length - 1] = (byte)(num % 2);
+            mas1[mas1.Length - 1] = Convert.ToBoolean(num % 2);
             return mas1;
         }
-        private byte[] checkStandart(byte[] mas)
+        private BitArray checkStandart(BitArray masTrue, int prop)
         {
-            byte[] mas1 = new byte[mas.Length*8/9];
-            short num = 0;
-            byte[] tmas = new byte[9];
+            BitArray mas = makeMistakes(masTrue, prop);
+            BitArray mas1 = new BitArray(mas.Length*8/9);
+            int num = 0;
+            BitArray tmas = new BitArray(9);
             for (int i = 0; i < mas.Length/9; i+=1)
             {
                 for (int j = 0; j < 9; j++)
                 {
                     tmas[j] = mas[i*9 + j];
                 }
-                makeMistakes(ref tmas);
-                num = -1;
-                while (num%2 != tmas[8])
+                num = 0;
+                for (int j = 0; j < 8; j++)
+                {
+                    num += Convert.ToInt32(tmas[j]);
+                }
+                while (num % 2 != Convert.ToInt32(tmas[8]))
                 {
                     num = 0;
+                    for (int j = 0; j < 9; j++)
+                    {
+                        tmas[j] = masTrue[i * 9 + j];
+                    }
+                    makeMistakes(ref tmas, prop);
                     for (int j = 0; j < 8; j++)
                     {
-                        num += tmas[j];
-                    }
-                    if (num % 2 != tmas[8])
-                    {
-                        for (int j = 0; j < 9; j++)
-                        {
-                            tmas[j] = mas[i*9 + j];
-                        }
-                        makeMistakes(ref tmas);
-                    }
-                    if (i%1000 == 0)
-                    {
-                        //MessageBox.Show(num + " " + i);
+                        num += Convert.ToInt32(tmas[j]);
                     }
                 }
                 for (int j = 0; j < 8; j++)
@@ -612,5 +615,51 @@ namespace ImageApp
             return mas1;
         }
 
+        private BitArray makeMD5(BitArray mas)
+        {
+            int trueLen = mas.Length;
+            BitArray mas1;
+            if (trueLen % 512 == 0)
+            {
+                mas1 = mas;
+            }
+            else
+            {
+                mas1 = new BitArray(trueLen + 512 - trueLen % 512);
+                for (int i = 0; i < trueLen; i++)
+                {
+                    mas1[i] = mas[i];
+                }
+                for (int i = trueLen; i < mas1.Length; i++)
+                {
+                    mas1[i] = false;
+                }
+            }
+
+
+
+            return mas1;
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Point[] rand = new Point[100];
+            Point[] standart = new Point[100];
+            BitArray mas1 = openFile();
+            BitArray mas2 = new BitArray(mas1.Length);
+            BitArray mas3 = new BitArray(mas1.Length);
+            for (int i = 2; i < 100; i++)
+            {
+                rand[i].X = i;
+                standart[i].X = i;
+                mas2 = makeMistakes(mas1, i);
+                mas3 = checkStandart(makeMoreSafeStandart(mas1), i);
+                rand[i].Y = compare(mas1, mas2);
+                standart[i].Y = compare(mas1, mas3);
+            }
+            
+            Form3 f3 = new Form3();
+            f3.Show();
+            f3.f3Show(rand, standart);
+        }
     }
 }
