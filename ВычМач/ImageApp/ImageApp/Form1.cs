@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 
 namespace ImageApp
 {
@@ -57,6 +58,38 @@ namespace ImageApp
             }
             return n;
         }
+        private BitArray getBitsFromNeededLength(BitArray mas, int ind, int l)
+        {
+            BitArray mas1 = new BitArray(l);
+            for (int i = ind; i < ind + l; i++)
+            {
+                mas1[i - ind] = mas[i];
+            }
+            return mas1;
+        }
+        private byte[] toByte(BitArray mas)
+        {
+            int l = mas.Length / 8;
+            if (mas.Length%8!= 0)
+            {
+                l++;
+            }
+            byte[] mas1 = new byte[l];
+            for (int i = 0; i < mas.Length; i += 8)
+            {
+                mas1[i / 8] = Convert.ToByte(getFromNeededLength(mas, i, Math.Min(8, mas.Length-i)));
+            }
+            return mas1;
+        }
+        private BitArray toBitArray(byte[] mas)
+        {
+            BitArray mas1 = new BitArray(mas.Length * 8);
+            for (int i = 0; i < mas.Length; i++)
+            {
+                insert(ref mas1, i * 8, toNeededLength(Convert.ToInt32(mas[i]), 8));
+            }
+            return mas1;
+        }
         private void insert(ref BitArray mas, int ind, BitArray mas1)
         {
             for (int i = 0; i < mas1.Length; i++)
@@ -64,6 +97,11 @@ namespace ImageApp
                 mas[ind + i] = mas1[i];
             }
         }
+
+
+
+
+
         public Form1()
         {
             InitializeComponent();
@@ -364,8 +402,9 @@ namespace ImageApp
             int height = getFromNeededLength(mas, ind, 16);
             ind += 16;
 
-            //mas = checkStandart(makeMoreSafeStandart(mas), 100);
+            //mas = checkStandart(makeMoreSafeStandart(mas), 200);
             //makeMistakes(ref mas, 10);
+            mas = checkMD5(makeMD5(mas), 100);
             short[,] colors = new short[colorsNumber, 3];
             for (int i = 0; i < colorsNumber; i++)
             {
@@ -617,49 +656,97 @@ namespace ImageApp
 
         private BitArray makeMD5(BitArray mas)
         {
-            int trueLen = mas.Length;
-            BitArray mas1;
-            if (trueLen % 512 == 0)
+            int n = mas.Length;
+            MD5 md5 = MD5.Create();
+            byte[] temp = new byte[119];
+            if (mas.Length % 952 == 0)
             {
-                mas1 = mas;
+                n -= 952;
             }
-            else
+            n = n + 952 - n % 952;
+            BitArray mas1 = new BitArray(n / 952 * 1080);
+            for (int i = 0; i < mas.Length - mas.Length% 952; i+= 952)//952 = 1024 - 64 - 8 идеальный объем для md5
             {
-                mas1 = new BitArray(trueLen + 512 - trueLen % 512);
-                for (int i = 0; i < trueLen; i++)
+                temp = toByte(getBitsFromNeededLength(mas, i, 952));
+                byte[] t = md5.ComputeHash(temp);
+                insert(ref mas1, i / 952 * 1080, getBitsFromNeededLength(mas, i, 952));
+                insert(ref mas1, i / 952 * 1080 + 952, toBitArray(t));
+            }
+            if (mas.Length % 952 != 0) 
+            {
+                BitArray tempArray = new BitArray(952);
+                insert(ref tempArray, 0, getBitsFromNeededLength(mas, mas.Length - (mas.Length%952), mas.Length % 952));
+                for (int i = 0; i < 952 - mas.Length % 952; i++)
                 {
-                    mas1[i] = mas[i];
+                    tempArray[i+ mas.Length % 952] = false;
                 }
-                for (int i = trueLen; i < mas1.Length; i++)
-                {
-                    mas1[i] = false;
-                }
+                byte[] t = md5.ComputeHash(toByte(tempArray));
+                insert(ref mas1, (mas.Length - (mas.Length % 952))/952 * 1080, tempArray);
+                insert(ref mas1, (mas.Length - (mas.Length % 952))/952 * 1080 + 952, toBitArray(t));
             }
 
 
 
             return mas1;
         }
+        private BitArray checkMD5(BitArray mas, int prop)
+        {
+            BitArray mas1 = new BitArray(mas.Length / 1080 * 952);
+            BitArray tMas = new BitArray(952);
+            BitArray tHash = new BitArray(128);
+            BitArray tHash1 = new BitArray(128);
+            MD5 md5 = MD5.Create();
+
+            for (int i = 0; i < mas.Length; i += 1080)
+            {
+                tMas = getBitsFromNeededLength(mas, i, 952);
+                tHash = getBitsFromNeededLength(mas, i+952, 128);
+                makeMistakes(ref tMas, prop);
+                makeMistakes(ref tHash, prop);
+                tHash1 = toBitArray(md5.ComputeHash(toByte(tMas)));
+                while (compare(tHash1, tHash) != 0)
+                {
+                    //MessageBox.Show(compare(tHash1, tHash) + " " + i);
+                    tMas = getBitsFromNeededLength(mas, i, 952);
+                    tHash = getBitsFromNeededLength(mas, i + 952, 128);
+                    makeMistakes(ref tMas, prop);
+                    makeMistakes(ref tHash, prop);
+                    tHash1 = toBitArray(md5.ComputeHash(toByte(tMas)));
+                }
+                if ((i/1080)%100 == 0)
+                {
+                    //MessageBox.Show(i + "");
+                }
+                insert(ref mas1, i / 1080 * 952, tMas);
+            }
+            MessageBox.Show("done");
+            return mas1;
+        }
         private void button4_Click(object sender, EventArgs e)
         {
             Point[] rand = new Point[100];
             Point[] standart = new Point[100];
+            Point[] md5 = new Point[100];
             BitArray mas1 = openFile();
             BitArray mas2 = new BitArray(mas1.Length);
             BitArray mas3 = new BitArray(mas1.Length);
-            for (int i = 2; i < 100; i++)
+            BitArray mas4 = new BitArray(mas1.Length);
+            for (int i = 0; i < 100; i++)
             {
-                rand[i].X = i;
-                standart[i].X = i;
-                mas2 = makeMistakes(mas1, i);
-                mas3 = checkStandart(makeMoreSafeStandart(mas1), i);
-                rand[i].Y = compare(mas1, mas2);
-                standart[i].Y = compare(mas1, mas3);
+                rand[i].X = i * 10 + 200;
+                standart[i].X = i * 10 + 200;
+                md5[i].X = i * 10 + 200;
+                //mas2 = makeMistakes(mas1, i*10 + 200);
+                //mas3 = checkStandart(makeMoreSafeStandart(mas1), i*10 + 200);
+                mas4 = checkMD5(makeMD5(mas1), i * 10 + 200);
+                //rand[i].Y = compare(mas1, mas2);
+                //standart[i].Y = compare(mas1, mas3);
+                md5[i].Y = compare(mas1, mas4);
             }
             
             Form3 f3 = new Form3();
             f3.Show();
-            f3.f3Show(rand, standart);
+            f3.f3Show(null, null, md5);
         }
     }
 }

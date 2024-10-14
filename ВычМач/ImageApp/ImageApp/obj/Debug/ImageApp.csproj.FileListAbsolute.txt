@@ -31,3 +31,4 @@ C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-
 C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.exe
 C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.pdb
 C:\Users\fireg\OneDrive\Рабочий стол\работа\git\-misis2024f-24-04-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.Form3.resources
+C:\Users\Light Flight PC\Desktop\work\-misis2024f-24-00-yapparov-e-t\ВычМач\ImageApp\ImageApp\obj\Debug\ImageApp.Form3.resources

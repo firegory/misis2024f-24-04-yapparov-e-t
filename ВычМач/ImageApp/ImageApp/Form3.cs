@@ -21,17 +21,21 @@ namespace ImageApp
         {
 
         }
-        public void f3Show(Point[] rand, Point[] standart)
+        public void f3Show(Point[] rand, Point[] standart, Point[] md5)
         {
-            for (int i = 0; i < rand.Length; i++)
+            //for (int i = 0; i < rand.Length; i++)
+            //{
+            //    chart2.Series[0].Points.AddXY(rand[i].X, rand[i].Y);
+            //}
+            //for (int i = 0; i < standart.Length; i++)
+            //{
+                //chart2.Series[1].Points.AddXY(standart[i].X, standart[i].Y);
+            //}
+            for (int i = 0; i < md5.Length; i++)
             {
-                chart1.Series[0].Points.AddXY(rand[i].X, rand[i].Y);
+                chart2.Series[2].Points.AddXY(md5[i].X, md5[i].Y);
             }
-            for (int i = 0; i < standart.Length; i++)
-            {
-                chart1.Series[1].Points.AddXY(standart[i].X, standart[i].Y);
-            }
-           
+
             Refresh();
         }
     }
