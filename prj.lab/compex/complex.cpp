@@ -1,40 +1,8 @@
 ﻿#include <iostream>
 #include<sstream>
+#include "complex.hpp"
 
-struct Complex
-{
-    Complex() = default;
-    explicit Complex(const double real);
-    Complex(const Complex& obj);
-    Complex(const double real, const double imaginary);
 
-    bool operator==(const Complex& rhs) const;
-    bool operator!=(const Complex& rhs) const;
-
-    Complex& operator+=(const Complex& rhs);
-    Complex& operator+=(const double rhs);
-    Complex& operator-=(const Complex& rhs);
-    Complex& operator-=(const double rhs);
-    Complex& operator*=(const Complex& rhs);
-    Complex& operator*=(const double rhs);
-    Complex& operator/=(const Complex& rhs);
-    Complex& operator/=(const double rhs);
-
-    std::ostream& writeTo(std::ostream& ostrm) const;
-    std::istream& readFrom(std::istream& istrm);
-
-    double r = 0.0;
-    double i = 0.0;
-
-    static const char start = '{';
-    static const char sep = ';';
-    static const char end = '}';
-};
-
-Complex operator+(const Complex& lhs, const Complex& rhs);
-Complex operator-(const Complex& lhs, const Complex& rhs);
-Complex operator*(const Complex& lhs, const Complex& rhs);
-Complex operator/(const Complex& lhs, const Complex& rhs);
 
 std::ostream& operator<<(std::ostream& ostrm, const Complex& rhs)
 {
@@ -80,9 +48,6 @@ Complex::Complex(const double real, const double imaginary) :
     r(real),
     i(imaginary)
 {}
-Complex::Complex(const Complex& obj) :
-    Complex(obj.r, obj.i)
-{}
 
 
 Complex& Complex::operator+=(const Complex& rhs)
@@ -97,6 +62,18 @@ Complex& Complex::operator+=(const double rhs)
     return *this;
 }
 Complex operator+(const Complex& lhs, const Complex& rhs)
+{
+    Complex t(lhs);
+    t += rhs;
+    return t;
+}
+Complex operator+(const Complex& lhs, const double& rhs)
+{
+    Complex t(lhs);
+    t += rhs;
+    return t;
+}
+Complex operator+(const double& lhs, const Complex& rhs)
 {
     Complex t(lhs);
     t += rhs;
@@ -120,6 +97,18 @@ Complex operator-(const Complex& lhs, const Complex& rhs)
     t -= rhs;
     return t;
 }
+Complex operator-(const Complex& lhs, const double& rhs)
+{
+    Complex t(lhs);
+    t -= rhs;
+    return t;
+}
+Complex operator-(const double& lhs, const Complex& rhs)
+{
+    Complex t(lhs);
+    t -= rhs;
+    return t;
+}
 
 Complex& Complex::operator*=(const Complex& rhs)
 {
@@ -134,6 +123,18 @@ Complex& Complex::operator*=(const double rhs)
     return *this;
 }
 Complex operator*(const Complex& lhs, const Complex& rhs)
+{
+    Complex t(lhs);
+    t *= rhs;
+    return t;
+}
+Complex operator*(const Complex& lhs, const double& rhs)
+{
+    Complex t(lhs);
+    t *= rhs;
+    return t;
+}
+Complex operator*(const double& lhs, const Complex& rhs)
 {
     Complex t(lhs);
     t *= rhs;
@@ -161,6 +162,18 @@ Complex operator/(const Complex& lhs, const Complex& rhs)
     t /= rhs;
     return t;
 }
+Complex operator/(const Complex& lhs, const double& rhs)
+{
+    Complex t(lhs);
+    t /= rhs;
+    return t;
+}
+Complex operator/(const double& lhs, const Complex& rhs)
+{
+    Complex t(lhs);
+    t /= rhs;
+    return t;
+}
 
 bool Complex::operator==(const Complex& rhs) const
 {
@@ -170,9 +183,29 @@ bool Complex::operator==(const Complex& rhs) const
     }
     return false;
 }
+bool Complex::operator==(const double& rhs) const
+{
+    if (r == rhs && i == 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool operator==(const double& lhs, const Complex& rhs)
+{
+    return rhs == lhs;
+}
 bool Complex::operator!=(const Complex& rhs) const
 {
-    return !(rhs == *this);
+    return !(*this == rhs);
+}
+bool Complex::operator!=(const double& rhs) const
+{
+    return !(*this == rhs);
+}
+bool operator!=(const double& lhs, const Complex& rhs)
+{
+    return !(rhs == lhs);
 }
 
 bool testOutput(const std::string& s)
@@ -206,6 +239,34 @@ void testOperations(const Complex& n, const Complex& n1)
         std::cout << n << " != " << n1 << "\n";
     }
 }
+void testOperationsWithNumber(const Complex& n, const double& n1)
+{
+    std::cout << "\n";
+    std::cout << n << " + " << n1 << " = " << (n + n1) << "\n";
+    std::cout << n1 << " + " << n << " = " << (n1 + n) << "\n";
+    std::cout << n << " - " << n1 << " = " << (n - n1) << "\n";
+    std::cout << n1 << " - " << n << " = " << (n1 - n) << "\n";
+    std::cout << n << " * " << n1 << " = " << (n * n1) << "\n";
+    std::cout << n1 << " * " << n << " = " << (n1 * n) << "\n";
+    std::cout << n << " / " << n1 << " = " << (n / n1) << "\n";
+    std::cout << n1 << " / " << n << " = " << (n1 / n) << "\n";
+    if (n == n1)
+    {
+        std::cout << n << " = " << n1 << "\n";
+    }
+    else
+    {
+        std::cout << n << " != " << n1 << "\n";
+    }
+    if (n1 == n)
+    {
+        std::cout << n1 << " = " << n << "\n";
+    }
+    else
+    {
+        std::cout << n1 << " != " << n << "\n";
+    }
+}
 
 
 int main()
@@ -237,5 +298,9 @@ int main()
 
     testOperations(n, n1);
 
+    double r = 0;
+    std::cout << "\nInput a real number: ";
+    std::cin >> r;
+    testOperationsWithNumber(n, r);
 }
 
