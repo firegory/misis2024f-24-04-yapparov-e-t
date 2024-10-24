@@ -1,4 +1,1 @@
-cmake_minimum_required(VERSION "3.8")
-
-project("compex")
-add_executable("complex" "complex.cpp")
+add_library(complex complex.cpp complex.hpp)
