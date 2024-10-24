@@ -1,4 +1,5 @@
 /out
+/doctest
 /bin.dbg
 build/
 /.vs

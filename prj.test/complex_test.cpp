@@ -58,6 +58,11 @@ int main()
     testOperations(n, n1);
     testOperationsWithNumber(n, 1);
 
+    Complex n0(0, 0);
+    std::cout << "\n";
+    std::cout << n << " / " << n0 << " = " << (n / n0) << "\n";
+    std::cout << n << " / " << 0 << " = " << (n / 0) << "\n";
+
     /*std::string tempStr;
     std::cout << "The numbers should be inputed in format {R;I}, where R is a real part of the number and I is the imaginary part\n";
 
