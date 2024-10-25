@@ -56,12 +56,29 @@ int main()
     Complex n1(2, 1);
 
     testOperations(n, n1);
-    testOperationsWithNumber(n, 1);
+    testOperationsWithNumber(n, 2);
 
     Complex n0(0, 0);
-    std::cout << "\n";
-    std::cout << n << " / " << n0 << " = " << (n / n0) << "\n";
-    std::cout << n << " / " << 0 << " = " << (n / 0) << "\n";
+
+    std::cout << "\n" << n << " / " << n0 << " = ";
+    try
+    {
+        std::cout << (n / n0) << "\n";
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << "\n";
+    }
+
+    std::cout << "\n" << n << " / " << 0 << " = ";
+    try
+    {
+        std::cout << (n / 0) << "\n";
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << "\n";
+    }
 
     /*std::string tempStr;
     std::cout << "The numbers should be inputed in format {R;I}, where R is a real part of the number and I is the imaginary part\n";

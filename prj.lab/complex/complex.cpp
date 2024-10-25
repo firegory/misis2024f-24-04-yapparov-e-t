@@ -147,6 +147,10 @@ Complex operator*(const double& lhs, const Complex& rhs) noexcept
 
 Complex& Complex::operator/=(const Complex& rhs)
 {
+    if ((rhs.r * rhs.r) + (rhs.i * rhs.i) == 0)
+    {
+        throw std::overflow_error("Divide by zero exception");
+    }
     double t = rhs.r * r + rhs.i * i;
     i = rhs.r * i - rhs.i * r;
     r = t;
