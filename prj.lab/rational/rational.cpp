@@ -56,10 +56,20 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
 Rational::Rational(const int numerator) :
     Rational(numerator, 1)
 {}
-Rational::Rational(const int num, const int den) :
-    numerator(num),
-    denominator(den)
-{}
+Rational::Rational(const int num, const int den)
+{
+    int gcd = greatestCommonDivisor(abs(num), abs(den));
+    if (den < 0)
+    {
+        numerator = num / gcd * -1;
+        denominator = den / gcd * -1;
+    }
+    else
+    {
+        numerator = num / gcd;
+        denominator = den / gcd;
+    }
+}
 
 Rational Rational::operator-() const noexcept
 {
