@@ -1,65 +1,65 @@
 #include <iosfwd>
 #include<sstream>
-#ifndef COMPLEX_HPP
-#define COMPLEX_HPP
+#ifndef Rational_HPP
+#define Rational_HPP
 
-struct Complex
+struct Rational
 {
-    Complex() = default;
-    explicit Complex(const double real);
-    Complex(const Complex& obj) = default;
-    Complex(const double real, const double imaginary);
+    Rational() = default;
+    explicit Rational(const int real);
+    Rational(const Rational& obj) = default;
+    Rational(const int real, const int imaginary);
 
-    ~Complex() = default;
+    ~Rational() = default;
 
-    bool operator==(const Complex& rhs) const noexcept;
-    bool operator==(const double& rhs) const noexcept;
-    bool operator!=(const Complex& rhs) const noexcept;
-    bool operator!=(const double& rhs) const noexcept;
+    bool operator==(const Rational& rhs) const noexcept;
+    bool operator==(const int& rhs) const noexcept;
+    bool operator!=(const Rational& rhs) const noexcept;
+    bool operator!=(const int& rhs) const noexcept;
 
-    Complex operator-() const noexcept;
-    Complex& operator+=(const Complex& rhs) noexcept;
-    Complex& operator+=(const double rhs) noexcept;
-    Complex& operator-=(const Complex& rhs) noexcept;
-    Complex& operator-=(const double rhs) noexcept;
-    Complex& operator*=(const Complex& rhs) noexcept;
-    Complex& operator*=(const double rhs) noexcept;
-    Complex& operator/=(const Complex& rhs);
-    Complex& operator/=(const double rhs);
+    Rational operator-() const noexcept;
+    Rational& operator+=(const Rational& rhs) noexcept;
+    Rational& operator+=(const int rhs) noexcept;
+    Rational& operator-=(const Rational& rhs) noexcept;
+    Rational& operator-=(const int rhs) noexcept;
+    Rational& operator*=(const Rational& rhs) noexcept;
+    Rational& operator*=(const int rhs) noexcept;
+    Rational& operator/=(const Rational& rhs);
+    Rational& operator/=(const int rhs);
 
     std::ostream& writeTo(std::ostream& ostrm) const noexcept;
     std::istream& readFrom(std::istream& istrm) noexcept;
 
-    double r = 0.0;
-    double i = 0.0;
+    int numerator = 0;
+    int denominator = 1;
 
     static const char start = '{';
-    static const char sep = ';';
+    static const char sep = '/';
     static const char end = '}';
 };
 
-Complex operator+(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator+(const Complex& lhs, const double& rhs) noexcept;
-Complex operator+(const double& lhs, const Complex& rhs) noexcept;
+Rational operator+(const Rational& lhs, const Rational& rhs) noexcept;
+Rational operator+(const Rational& lhs, const int& rhs) noexcept;
+Rational operator+(const int& lhs, const Rational& rhs) noexcept;
 
-Complex operator-(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator-(const Complex& lhs, const double& rhs) noexcept;
-Complex operator-(const double& lhs, const Complex& rhs) noexcept;
+Rational operator-(const Rational& lhs, const Rational& rhs) noexcept;
+Rational operator-(const Rational& lhs, const int& rhs) noexcept;
+Rational operator-(const int& lhs, const Rational& rhs) noexcept;
 
-Complex operator*(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator*(const Complex& lhs, const double& rhs) noexcept;
-Complex operator*(const double& lhs, const Complex& rhs) noexcept;
+Rational operator*(const Rational& lhs, const Rational& rhs) noexcept;
+Rational operator*(const Rational& lhs, const int& rhs) noexcept;
+Rational operator*(const int& lhs, const Rational& rhs) noexcept;
 
-Complex operator/(const Complex& lhs, const Complex& rhs);
-Complex operator/(const Complex& lhs, const double& rhs);
-Complex operator/(const double& lhs, const Complex& rhs);
+Rational operator/(const Rational& lhs, const Rational& rhs);
+Rational operator/(const Rational& lhs, const int& rhs);
+Rational operator/(const int& lhs, const Rational& rhs);
 
-bool operator==(const double& lhs, const Complex& rhs) noexcept;
-bool operator!=(const double& lhs, const Complex& rhs) noexcept;
+bool operator==(const int& lhs, const Rational& rhs) noexcept;
+bool operator!=(const int& lhs, const Rational& rhs) noexcept;
 
-std::ostream& operator<<(std::ostream& ostrm, const Complex& rhs) noexcept;
-std::istream& operator>>(std::istream& istrm, Complex& rhs) noexcept;
+std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept;
+std::istream& operator>>(std::istream& istrm, Rational& rhs) noexcept;
 
 bool testOutput(const std::string& s) noexcept;
 
-#endif // !COMPLEX_HPP
+#endif // !Rational_HPP

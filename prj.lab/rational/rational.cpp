@@ -1,36 +1,48 @@
 ﻿#include <iostream>
 #include<sstream>
-#include "complex.hpp"
+#include "rational.hpp"
 
 
+int greatestCommonDivisor(int a, int b) {
+    if (a < b) {
+        std::swap(a, b);
+    }
 
-std::ostream& operator<<(std::ostream& ostrm, const Complex& rhs) noexcept
+    while (b) {
+        a %= b;
+        std::swap(a, b);
+    }
+
+    return a;
+}
+
+std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept
 {
     return rhs.writeTo(ostrm);
 }
-std::istream& operator>>(std::istream& istrm, Complex& rhs) noexcept
+std::istream& operator>>(std::istream& istrm, Rational& rhs) noexcept
 {
     return rhs.readFrom(istrm);
 }
-std::ostream& Complex::writeTo(std::ostream& ostrm) const noexcept
+std::ostream& Rational::writeTo(std::ostream& ostrm) const noexcept
 {
-    ostrm << start << r << sep << i << end;
+    ostrm << start << numerator << sep << denominator << end;
     return ostrm;
 }
-std::istream& Complex::readFrom(std::istream& istrm) noexcept
+std::istream& Rational::readFrom(std::istream& istrm) noexcept
 {
     char start = ' ';
     char sep = ' ';
     char end = ' ';
-    double real = 0;
-    double imaginary = 0;
-    istrm >> start >> real >> sep >> imaginary >> end;
+    int num = 0;
+    int den = 0;
+    istrm >> start >> num >> sep >> den >> end;
     if (istrm.good())
     {
-        if (Complex::start == start && Complex::sep == sep && Complex::end == end)
+        if (Rational::start == start && Rational::sep == sep && Rational::end == end)
         {
-            r = real;
-            i = imaginary;
+            numerator = num;
+            denominator = den;
         }
         else
         {
@@ -41,177 +53,184 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
 }
 
 
-Complex::Complex(const double real) :
-    Complex(real, 0.0)
+Rational::Rational(const int numerator) :
+    Rational(numerator, 1)
 {}
-Complex::Complex(const double real, const double imaginary) :
-    r(real),
-    i(imaginary)
+Rational::Rational(const int num, const int den) :
+    numerator(num),
+    denominator(den)
 {}
 
-Complex Complex::operator-() const noexcept
+Rational Rational::operator-() const noexcept
 {
-    return Complex(-1*r,-1*i);
+    return Rational(-1* numerator, denominator);
 }
 
-Complex& Complex::operator+=(const Complex& rhs) noexcept
+Rational& Rational::operator+=(const Rational& rhs) noexcept
 {
-    r += rhs.r;
-    i += rhs.i;
+    int gcd = greatestCommonDivisor(denominator, rhs.denominator);
+    numerator *= rhs.denominator / gcd;
+    numerator += rhs.numerator * denominator / gcd;
+    denominator *= rhs.denominator / gcd;
     return *this;
 }
-Complex& Complex::operator+=(const double rhs)  noexcept
+Rational& Rational::operator+=(const int rhs)  noexcept
 {
-    *this += Complex(rhs);
+    *this += Rational(rhs);
     return *this;
 }
-Complex operator+(const Complex& lhs, const Complex& rhs) noexcept
+Rational operator+(const Rational& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t += rhs;
     return t;
 }
-Complex operator+(const Complex& lhs, const double& rhs) noexcept
+Rational operator+(const Rational& lhs, const int& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t += rhs;
     return t;
 }
-Complex operator+(const double& lhs, const Complex& rhs) noexcept
+Rational operator+(const int& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t += rhs;
     return t;
 }
 
-Complex& Complex::operator-=(const Complex& rhs) noexcept
+Rational& Rational::operator-=(const Rational& rhs) noexcept
 {
-    r -= rhs.r;
-    i -= rhs.i;
+    *this += -rhs;
     return *this;
 }
-Complex& Complex::operator-=(const double rhs) noexcept
+Rational& Rational::operator-=(const int rhs) noexcept
 {
-    *this -= Complex(rhs);
+    *this -= Rational(rhs);
     return *this;
 }
-Complex operator-(const Complex& lhs, const Complex& rhs) noexcept
+Rational operator-(const Rational& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t -= rhs;
     return t;
 }
-Complex operator-(const Complex& lhs, const double& rhs) noexcept
+Rational operator-(const Rational& lhs, const int& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t -= rhs;
     return t;
 }
-Complex operator-(const double& lhs, const Complex& rhs) noexcept
+Rational operator-(const int& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t -= rhs;
     return t;
 }
 
-Complex& Complex::operator*=(const Complex& rhs) noexcept
+Rational& Rational::operator*=(const Rational& rhs) noexcept
 {
-    double r1 = rhs.r * r - rhs.i * i;
-    i = rhs.i * r + rhs.r * i;
-    r = r1;
+    numerator *= rhs.numerator;
+    denominator *= rhs.denominator;
+    int gcd = greatestCommonDivisor(abs(numerator), denominator);
+    numerator /= gcd;
+    denominator /= gcd;
     return *this;
 }
-Complex& Complex::operator*=(const double rhs) noexcept
+Rational& Rational::operator*=(const int rhs) noexcept
 {
-    *this *= Complex(rhs);
+    *this *= Rational(rhs);
     return *this;
 }
-Complex operator*(const Complex& lhs, const Complex& rhs) noexcept
+Rational operator*(const Rational& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t *= rhs;
     return t;
 }
-Complex operator*(const Complex& lhs, const double& rhs) noexcept
+Rational operator*(const Rational& lhs, const int& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t *= rhs;
     return t;
 }
-Complex operator*(const double& lhs, const Complex& rhs) noexcept
+Rational operator*(const int& lhs, const Rational& rhs) noexcept
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t *= rhs;
     return t;
 }
 
-Complex& Complex::operator/=(const Complex& rhs)
+Rational& Rational::operator/=(const Rational& rhs)
 {
-    if ((rhs.r * rhs.r) + (rhs.i * rhs.i) == 0)
+    if (rhs.numerator == 0)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    double t = rhs.r * r + rhs.i * i;
-    i = rhs.r * i - rhs.i * r;
-    r = t;
-    t = (rhs.r * rhs.r) + (rhs.i * rhs.i);
-    r /= t;
-    i /= t;
+    Rational t(0,1);
+    if (rhs.numerator < 0)
+    {
+        t = Rational(-1 * rhs.denominator, -1 * rhs.numerator);
+    }
+    else
+    {
+        t = Rational(rhs.denominator, rhs.numerator);
+    }
+    *this *= t;
     return *this;
 }
-Complex& Complex::operator/=(const double rhs)
+Rational& Rational::operator/=(const int rhs)
 {
-    *this /= Complex(rhs);
+    *this /= Rational(rhs);
     return *this;
 }
-Complex operator/(const Complex& lhs, const Complex& rhs)
+Rational operator/(const Rational& lhs, const Rational& rhs)
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t /= rhs;
     return t;
 }
-Complex operator/(const Complex& lhs, const double& rhs)
+Rational operator/(const Rational& lhs, const int& rhs)
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t /= rhs;
     return t;
 }
-Complex operator/(const double& lhs, const Complex& rhs)
+Rational operator/(const int& lhs, const Rational& rhs)
 {
-    Complex t(lhs);
+    Rational t(lhs);
     t /= rhs;
     return t;
 }
 
-bool Complex::operator==(const Complex& rhs) const noexcept
+bool Rational::operator==(const Rational& rhs) const noexcept
 {
-    if (r == rhs.r && i == rhs.i)
+    if (numerator == rhs.numerator && denominator == rhs.denominator)
     {
         return true;
     }
     return false;
 }
-bool Complex::operator==(const double& rhs) const noexcept
+bool Rational::operator==(const int& rhs) const noexcept
 {
-    if (r == rhs && i == 0)
+    if (numerator == rhs && denominator == 1)
     {
         return true;
     }
     return false;
 }
-bool operator==(const double& lhs, const Complex& rhs) noexcept
+bool operator==(const int& lhs, const Rational& rhs) noexcept
 {
     return rhs == lhs;
 }
-bool Complex::operator!=(const Complex& rhs) const noexcept
+bool Rational::operator!=(const Rational& rhs) const noexcept
 {
     return !(*this == rhs);
 }
-bool Complex::operator!=(const double& rhs) const noexcept
+bool Rational::operator!=(const int& rhs) const noexcept
 {
     return !(*this == rhs);
 }
-bool operator!=(const double& lhs, const Complex& rhs) noexcept
+bool operator!=(const int& lhs, const Rational& rhs) noexcept
 {
     return !(rhs == lhs);
 }
@@ -219,7 +238,7 @@ bool operator!=(const double& lhs, const Complex& rhs) noexcept
 bool testOutput(const std::string& s) noexcept
 {
     std::istringstream istrm(s);
-    Complex n;
+    Rational n;
     istrm >> n;
     if (istrm.good())
     {
