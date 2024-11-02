@@ -19,7 +19,7 @@ TEST_CASE("[Rational] - Rational Rational operations") {
 	CHECK(Rational(1, 2) != Rational(1, 1));
 }
 
-TEST_CASE("[Rational] - Rational double operations") {
+TEST_CASE("[Rational] - Rational int operations") {
 	CHECK(Rational(1, 2) + 1 == Rational(3, 2));
 	CHECK(Rational(1, 2) - 1 == Rational(-1, 2));
 	CHECK(Rational(1, 2) * 2 == Rational(1, 1));
@@ -28,7 +28,7 @@ TEST_CASE("[Rational] - Rational double operations") {
 	CHECK(Rational(1, 2) != 1);
 }
 
-TEST_CASE("[Rational] - double Rational operations") {
+TEST_CASE("[Rational] - int Rational operations") {
 	CHECK(1 + Rational(1, 2) == Rational(3, 2));
 	CHECK(1 - Rational(3, 2) == Rational(-1, 2));
 	CHECK(2 * Rational(1, 6) == Rational(1, 3));
