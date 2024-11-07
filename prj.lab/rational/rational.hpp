@@ -1,5 +1,6 @@
 #include <iosfwd>
 #include<sstream>
+
 #ifndef Rational_HPP
 #define Rational_HPP
 

@@ -1,6 +1,7 @@
-﻿#include <iostream>
+﻿#include "rational.hpp"
+
+#include <iostream>
 #include<sstream>
-#include "rational.hpp"
 
 
 int greatestCommonDivisor(int a, int b) {
