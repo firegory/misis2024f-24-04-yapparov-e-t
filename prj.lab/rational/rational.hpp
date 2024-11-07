@@ -4,8 +4,14 @@
 #ifndef Rational_HPP
 #define Rational_HPP
 
-struct Rational
+class Rational
 {
+private:
+    int numerator = 0;
+    int denominator = 1;
+
+    static const char sep = '/';
+public:
     Rational() = default;
     explicit Rational(const int real);
     Rational(const Rational& obj) = default;
@@ -13,10 +19,21 @@ struct Rational
 
     ~Rational() = default;
 
+    Rational& operator=(const Rational&) = default;
+
     bool operator==(const Rational& rhs) const noexcept;
     bool operator==(const int& rhs) const noexcept;
     bool operator!=(const Rational& rhs) const noexcept;
     bool operator!=(const int& rhs) const noexcept;
+
+    bool operator>(const Rational& rhs) const noexcept;
+    bool operator>(const int& rhs) const noexcept;
+    bool operator>=(const Rational& rhs) const noexcept;
+    bool operator>=(const int& rhs) const noexcept;
+    bool operator<(const Rational& rhs) const noexcept;
+    bool operator<(const int& rhs) const noexcept;
+    bool operator<=(const Rational& rhs) const noexcept;
+    bool operator<=(const int& rhs) const noexcept;
 
     Rational operator-() const noexcept;
     Rational& operator+=(const Rational& rhs) noexcept;
@@ -31,12 +48,8 @@ struct Rational
     std::ostream& writeTo(std::ostream& ostrm) const noexcept;
     std::istream& readFrom(std::istream& istrm) noexcept;
 
-    int numerator = 0;
-    int denominator = 1;
-
-    static const char start = '{';
-    static const char sep = '/';
-    static const char end = '}';
+    int num();
+    int den();
 };
 
 Rational operator+(const Rational& lhs, const Rational& rhs) noexcept;
@@ -57,6 +70,11 @@ Rational operator/(const int& lhs, const Rational& rhs);
 
 bool operator==(const int& lhs, const Rational& rhs) noexcept;
 bool operator!=(const int& lhs, const Rational& rhs) noexcept;
+
+bool operator>(const int& lhs, const Rational& rhs) noexcept;
+bool operator>=(const int& lhs, const Rational& rhs) noexcept;
+bool operator<(const int& lhs, const Rational& rhs) noexcept;
+bool operator<=(const int& lhs, const Rational& rhs) noexcept;
 
 std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept;
 std::istream& operator>>(std::istream& istrm, Rational& rhs) noexcept;

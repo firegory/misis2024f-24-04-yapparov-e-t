@@ -27,20 +27,18 @@ std::istream& operator>>(std::istream& istrm, Rational& rhs) noexcept
 }
 std::ostream& Rational::writeTo(std::ostream& ostrm) const noexcept
 {
-    ostrm << start << numerator << sep << denominator << end;
+    ostrm << numerator << sep << denominator;
     return ostrm;
 }
 std::istream& Rational::readFrom(std::istream& istrm) noexcept
 {
-    char start = ' ';
     char sep = ' ';
-    char end = ' ';
     int num = 0;
     int den = 0;
-    istrm >> start >> num >> sep >> den >> end;
+    istrm >> num >> sep >> den;
     if (istrm.good())
     {
-        if (Rational::start == start && Rational::sep == sep && Rational::end == end)
+        if (Rational::sep == sep && den > 0)
         {
             numerator = num;
             denominator = den;
@@ -59,6 +57,10 @@ Rational::Rational(const int numerator) :
 {}
 Rational::Rational(const int num, const int den)
 {
+    if (den == 0)
+    {
+        throw std::overflow_error("Divide by zero exception");
+    }
     int gcd = greatestCommonDivisor(abs(num), abs(den));
     if (den < 0)
     {
@@ -70,6 +72,14 @@ Rational::Rational(const int num, const int den)
         numerator = num / gcd;
         denominator = den / gcd;
     }
+}
+int Rational::num()
+{
+    return numerator;
+}
+int Rational::den()
+{
+    return denominator;
 }
 
 Rational Rational::operator-() const noexcept
@@ -244,6 +254,62 @@ bool Rational::operator!=(const int& rhs) const noexcept
 bool operator!=(const int& lhs, const Rational& rhs) noexcept
 {
     return !(rhs == lhs);
+}
+
+bool Rational::operator>(const Rational& rhs) const noexcept
+{
+    int gcd = greatestCommonDivisor(denominator, rhs.denominator);
+    if (numerator * rhs.denominator / gcd > rhs.numerator * denominator / gcd)
+    {
+        return true;
+    }
+    return false;
+}
+bool Rational::operator>=(const Rational& rhs) const noexcept
+{
+    return (*this > rhs || *this == rhs);
+}
+bool Rational::operator<(const Rational& rhs) const noexcept
+{
+    return rhs > *this;
+}
+bool Rational::operator<=(const Rational& rhs) const noexcept
+{
+    return (*this < rhs || *this == rhs);
+}
+
+bool Rational::operator>(const int& rhs) const noexcept
+{
+    return *this > Rational(rhs);
+}
+bool Rational::operator>=(const int& rhs) const noexcept
+{
+    return *this >= Rational(rhs);
+}
+bool Rational::operator<(const int& rhs) const noexcept
+{
+    return *this < Rational(rhs);
+}
+bool Rational::operator<=(const int& rhs) const noexcept
+{
+    return *this <= Rational(rhs);
+}
+
+bool operator>(const int& lhs, const Rational& rhs) noexcept
+{
+    return rhs < lhs;
+}
+bool operator>=(const int& lhs, const Rational& rhs) noexcept
+{
+    return rhs <= lhs;
+}
+bool operator<(const int& lhs, const Rational& rhs) noexcept
+{
+    return rhs > lhs;
+}
+bool operator<=(const int& lhs, const Rational& rhs) noexcept
+{
+    return rhs >= lhs;
 }
 
 bool testOutput(const std::string& s) noexcept

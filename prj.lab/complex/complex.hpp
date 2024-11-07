@@ -13,6 +13,8 @@ struct Complex
 
     ~Complex() = default;
 
+    Complex& operator=(const Complex&) = default;
+
     bool operator==(const Complex& rhs) const noexcept;
     bool operator==(const double& rhs) const noexcept;
     bool operator!=(const Complex& rhs) const noexcept;

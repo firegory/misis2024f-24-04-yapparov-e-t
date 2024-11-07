@@ -7,6 +7,7 @@ TEST_CASE("[Rational] - ctor") {
 	CHECK(Rational() == Rational(0, 1));
 	CHECK(Rational(1) == Rational(1, 1));
 	CHECK(Rational(2, 4) == Rational(1, 2));
+	CHECK(Rational(0, 4) == Rational(0, 1));
 	CHECK(Rational(1, -1) == Rational(-1, 1));
 }
 
@@ -17,6 +18,12 @@ TEST_CASE("[Rational] - Rational Rational operations") {
 	CHECK(Rational(1, 1) / Rational(2, 1) == Rational(1, 2));
 	CHECK(-Rational(1, 1) == Rational(-1, 1));
 	CHECK(Rational(1, 2) != Rational(1, 1));
+	CHECK(Rational(3, 2) > Rational(1, 1));
+	CHECK(Rational(3, 2) >= Rational(1, 2));
+	CHECK(Rational(3, 2) >= Rational(3, 2));
+	CHECK(Rational(1, 2) < Rational(1, 1));
+	CHECK(Rational(1, 2) <= Rational(3, 2));
+	CHECK(Rational(1, 2) <= Rational(1, 2));
 }
 
 TEST_CASE("[Rational] - Rational int operations") {
@@ -26,6 +33,12 @@ TEST_CASE("[Rational] - Rational int operations") {
 	CHECK(Rational(1, 1) / 2 == Rational(1, 2));
 	CHECK(Rational(1, 1) == 1);
 	CHECK(Rational(1, 2) != 1);
+	CHECK(Rational(3, 2) > 1);
+	CHECK(Rational(3, 2) >= 1);
+	CHECK(Rational(3, 1) >= 3);
+	CHECK(Rational(1, 2) < 1);
+	CHECK(Rational(1, 2) <= 1);
+	CHECK(Rational(2, 1) <= 2);
 }
 
 TEST_CASE("[Rational] - int Rational operations") {
@@ -35,9 +48,16 @@ TEST_CASE("[Rational] - int Rational operations") {
 	CHECK(2 / Rational(2, 3) == Rational(3, 1));
 	CHECK(1 == Rational(1, 1));
 	CHECK(1 != Rational(1, 2));
+	CHECK(1 > Rational(1, 2));
+	CHECK(2 >= Rational(3, 2));
+	CHECK(2 >= Rational(2, 1));
+	CHECK(1 < Rational(3, 2));
+	CHECK(1 <= Rational(3, 2));
+	CHECK(1 <= Rational(1, 1));
 }
 
 TEST_CASE("[Rational] - excepetions") {
 	CHECK_THROWS_WITH(Rational(1, 1) / Rational(0, 1), "Divide by zero exception");
 	CHECK_THROWS_WITH(Rational(1, 1) / 0, "Divide by zero exception");
+	CHECK_THROWS_WITH(Rational(1, 0), "Divide by zero exception");
 }
