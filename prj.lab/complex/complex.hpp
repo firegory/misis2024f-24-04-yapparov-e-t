@@ -15,12 +15,12 @@ struct Complex
 
     Complex& operator=(const Complex&) = default;
 
-    bool operator==(const Complex& rhs) const noexcept;
-    bool operator==(const double& rhs) const noexcept;
-    bool operator!=(const Complex& rhs) const noexcept;
-    bool operator!=(const double& rhs) const noexcept;
+    [[nodiscard]] bool operator==(const Complex& rhs) const noexcept;
+    [[nodiscard]] bool operator==(const double& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const Complex& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const double& rhs) const noexcept;
 
-    Complex operator-() const noexcept;
+    [[nodiscard]] Complex operator-() const noexcept;
     Complex& operator+=(const Complex& rhs) noexcept;
     Complex& operator+=(const double rhs) noexcept;
     Complex& operator-=(const Complex& rhs) noexcept;
@@ -30,35 +30,35 @@ struct Complex
     Complex& operator/=(const Complex& rhs);
     Complex& operator/=(const double rhs);
 
-    std::ostream& writeTo(std::ostream& ostrm) const noexcept;
-    std::istream& readFrom(std::istream& istrm) noexcept;
+    [[nodiscard]] std::ostream& writeTo(std::ostream& ostrm) const noexcept;
+    [[nodiscard]] std::istream& readFrom(std::istream& istrm) noexcept;
 
-    double r = 0.0;
-    double i = 0.0;
+    double re = 0.0;
+    double im = 0.0;
 
     static const char start = '{';
     static const char sep = ';';
     static const char end = '}';
 };
 
-Complex operator+(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator+(const Complex& lhs, const double& rhs) noexcept;
-Complex operator+(const double& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator+(const Complex& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator+(const Complex& lhs, const double& rhs) noexcept;
+[[nodiscard]] Complex operator+(const double& lhs, const Complex& rhs) noexcept;
 
-Complex operator-(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator-(const Complex& lhs, const double& rhs) noexcept;
-Complex operator-(const double& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator-(const Complex& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator-(const Complex& lhs, const double& rhs) noexcept;
+[[nodiscard]] Complex operator-(const double& lhs, const Complex& rhs) noexcept;
 
-Complex operator*(const Complex& lhs, const Complex& rhs) noexcept;
-Complex operator*(const Complex& lhs, const double& rhs) noexcept;
-Complex operator*(const double& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator*(const Complex& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] Complex operator*(const Complex& lhs, const double& rhs) noexcept;
+[[nodiscard]] Complex operator*(const double& lhs, const Complex& rhs) noexcept;
 
-Complex operator/(const Complex& lhs, const Complex& rhs);
-Complex operator/(const Complex& lhs, const double& rhs);
-Complex operator/(const double& lhs, const Complex& rhs);
+[[nodiscard]] Complex operator/(const Complex& lhs, const Complex& rhs);
+[[nodiscard]] Complex operator/(const Complex& lhs, const double& rhs);
+[[nodiscard]] Complex operator/(const double& lhs, const Complex& rhs);
 
-bool operator==(const double& lhs, const Complex& rhs) noexcept;
-bool operator!=(const double& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] bool operator==(const double& lhs, const Complex& rhs) noexcept;
+[[nodiscard]] bool operator!=(const double& lhs, const Complex& rhs) noexcept;
 
 std::ostream& operator<<(std::ostream& ostrm, const Complex& rhs) noexcept;
 std::istream& operator>>(std::istream& istrm, Complex& rhs) noexcept;

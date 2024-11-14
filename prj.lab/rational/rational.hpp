@@ -21,21 +21,21 @@ public:
 
     Rational& operator=(const Rational&) = default;
 
-    bool operator==(const Rational& rhs) const noexcept;
-    bool operator==(const int& rhs) const noexcept;
-    bool operator!=(const Rational& rhs) const noexcept;
-    bool operator!=(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator==(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator==(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const int& rhs) const noexcept;
 
-    bool operator>(const Rational& rhs) const noexcept;
-    bool operator>(const int& rhs) const noexcept;
-    bool operator>=(const Rational& rhs) const noexcept;
-    bool operator>=(const int& rhs) const noexcept;
-    bool operator<(const Rational& rhs) const noexcept;
-    bool operator<(const int& rhs) const noexcept;
-    bool operator<=(const Rational& rhs) const noexcept;
-    bool operator<=(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator>(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator>(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator>=(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator>=(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator<(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator<(const int& rhs) const noexcept;
+    [[nodiscard]] bool operator<=(const Rational& rhs) const noexcept;
+    [[nodiscard]] bool operator<=(const int& rhs) const noexcept;
 
-    Rational operator-() const noexcept;
+    [[nodiscard]] Rational operator-() const noexcept;
     Rational& operator+=(const Rational& rhs) noexcept;
     Rational& operator+=(const int rhs) noexcept;
     Rational& operator-=(const Rational& rhs) noexcept;
@@ -52,29 +52,29 @@ public:
     int den();
 };
 
-Rational operator+(const Rational& lhs, const Rational& rhs) noexcept;
-Rational operator+(const Rational& lhs, const int& rhs) noexcept;
-Rational operator+(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator+(const Rational& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator+(const Rational& lhs, const int& rhs) noexcept;
+[[nodiscard]] Rational operator+(const int& lhs, const Rational& rhs) noexcept;
 
-Rational operator-(const Rational& lhs, const Rational& rhs) noexcept;
-Rational operator-(const Rational& lhs, const int& rhs) noexcept;
-Rational operator-(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator-(const Rational& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator-(const Rational& lhs, const int& rhs) noexcept;
+[[nodiscard]] Rational operator-(const int& lhs, const Rational& rhs) noexcept;
 
-Rational operator*(const Rational& lhs, const Rational& rhs) noexcept;
-Rational operator*(const Rational& lhs, const int& rhs) noexcept;
-Rational operator*(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator*(const Rational& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] Rational operator*(const Rational& lhs, const int& rhs) noexcept;
+[[nodiscard]] Rational operator*(const int& lhs, const Rational& rhs) noexcept;
 
-Rational operator/(const Rational& lhs, const Rational& rhs);
-Rational operator/(const Rational& lhs, const int& rhs);
-Rational operator/(const int& lhs, const Rational& rhs);
+[[nodiscard]] Rational operator/(const Rational& lhs, const Rational& rhs);
+[[nodiscard]] Rational operator/(const Rational& lhs, const int& rhs);
+[[nodiscard]] Rational operator/(const int& lhs, const Rational& rhs);
 
-bool operator==(const int& lhs, const Rational& rhs) noexcept;
-bool operator!=(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator==(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator!=(const int& lhs, const Rational& rhs) noexcept;
 
-bool operator>(const int& lhs, const Rational& rhs) noexcept;
-bool operator>=(const int& lhs, const Rational& rhs) noexcept;
-bool operator<(const int& lhs, const Rational& rhs) noexcept;
-bool operator<=(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator>(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator>=(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator<(const int& lhs, const Rational& rhs) noexcept;
+[[nodiscard]] bool operator<=(const int& lhs, const Rational& rhs) noexcept;
 
 std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept;
 std::istream& operator>>(std::istream& istrm, Rational& rhs) noexcept;

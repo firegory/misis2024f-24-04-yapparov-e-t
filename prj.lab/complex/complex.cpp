@@ -16,7 +16,7 @@ std::istream& operator>>(std::istream& istrm, Complex& rhs) noexcept
 }
 std::ostream& Complex::writeTo(std::ostream& ostrm) const noexcept
 {
-    ostrm << start << r << sep << i << end;
+    ostrm << start << re << sep << im << end;
     return ostrm;
 }
 std::istream& Complex::readFrom(std::istream& istrm) noexcept
@@ -31,8 +31,8 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     {
         if (Complex::start == start && Complex::sep == sep && Complex::end == end)
         {
-            r = real;
-            i = imaginary;
+            re = real;
+            im = imaginary;
         }
         else
         {
@@ -47,19 +47,19 @@ Complex::Complex(const double real) :
     Complex(real, 0.0)
 {}
 Complex::Complex(const double real, const double imaginary) :
-    r(real),
-    i(imaginary)
+    re(real),
+    im(imaginary)
 {}
 
 Complex Complex::operator-() const noexcept
 {
-    return Complex(-1*r,-1*i);
+    return Complex(-1*re,-1*im);
 }
 
 Complex& Complex::operator+=(const Complex& rhs) noexcept
 {
-    r += rhs.r;
-    i += rhs.i;
+    re += rhs.re;
+    im += rhs.im;
     return *this;
 }
 Complex& Complex::operator+=(const double rhs)  noexcept
@@ -88,8 +88,8 @@ Complex operator+(const double& lhs, const Complex& rhs) noexcept
 
 Complex& Complex::operator-=(const Complex& rhs) noexcept
 {
-    r -= rhs.r;
-    i -= rhs.i;
+    re -= rhs.re;
+    im -= rhs.im;
     return *this;
 }
 Complex& Complex::operator-=(const double rhs) noexcept
@@ -118,9 +118,9 @@ Complex operator-(const double& lhs, const Complex& rhs) noexcept
 
 Complex& Complex::operator*=(const Complex& rhs) noexcept
 {
-    double r1 = rhs.r * r - rhs.i * i;
-    i = rhs.i * r + rhs.r * i;
-    r = r1;
+    double r1 = rhs.re * re - rhs.im * im;
+    im = rhs.im * re + rhs.re * im;
+    re = r1;
     return *this;
 }
 Complex& Complex::operator*=(const double rhs) noexcept
@@ -149,16 +149,16 @@ Complex operator*(const double& lhs, const Complex& rhs) noexcept
 
 Complex& Complex::operator/=(const Complex& rhs)
 {
-    if ((rhs.r * rhs.r) + (rhs.i * rhs.i) == 0)
+    if ((rhs.re * rhs.re) + (rhs.im * rhs.im) == 0)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    double t = rhs.r * r + rhs.i * i;
-    i = rhs.r * i - rhs.i * r;
-    r = t;
-    t = (rhs.r * rhs.r) + (rhs.i * rhs.i);
-    r /= t;
-    i /= t;
+    double t = rhs.re * re + rhs.im * im;
+    im = rhs.re * im - rhs.im * re;
+    re = t;
+    t = (rhs.re * rhs.re) + (rhs.im * rhs.im);
+    re /= t;
+    im /= t;
     return *this;
 }
 Complex& Complex::operator/=(const double rhs)
@@ -187,7 +187,7 @@ Complex operator/(const double& lhs, const Complex& rhs)
 
 bool Complex::operator==(const Complex& rhs) const noexcept
 {
-    if (r == rhs.r && i == rhs.i)
+    if(re == rhs.re && im == rhs.im)
     {
         return true;
     }
@@ -195,7 +195,7 @@ bool Complex::operator==(const Complex& rhs) const noexcept
 }
 bool Complex::operator==(const double& rhs) const noexcept
 {
-    if (r == rhs && i == 0)
+    if(re == rhs && im == 0)
     {
         return true;
     }
