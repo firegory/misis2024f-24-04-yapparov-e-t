@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include<sstream>
+#include<string>
 
 
 int greatestCommonDivisor(int a, int b) {
@@ -40,8 +41,7 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     {
         if (Rational::sep == sep && den > 0)
         {
-            numerator = num;
-            denominator = den;
+            *this = Rational(num, den);
         }
         else
         {

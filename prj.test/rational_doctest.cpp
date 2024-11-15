@@ -3,12 +3,19 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
+#include<iostream>
+#include<sstream>
+
 TEST_CASE("[Rational] - ctor") {
 	CHECK(Rational() == Rational(0, 1));
 	CHECK(Rational(1) == Rational(1, 1));
 	CHECK(Rational(2, 4) == Rational(1, 2));
 	CHECK(Rational(0, 4) == Rational(0, 1));
 	CHECK(Rational(1, -1) == Rational(-1, 1));
+}
+
+TEST_CASE("[Rational] - input output") {
+	CHECK(testOutput("11/22 "));
 }
 
 TEST_CASE("[Rational] - Rational Rational operations") {
@@ -59,5 +66,6 @@ TEST_CASE("[Rational] - int Rational operations") {
 TEST_CASE("[Rational] - excepetions") {
 	CHECK_THROWS_WITH(Rational(1, 1) / Rational(0, 1), "Divide by zero exception");
 	CHECK_THROWS_WITH(Rational(1, 1) / 0, "Divide by zero exception");
+	CHECK_THROWS_WITH(0 / Rational(0, 1), "Divide by zero exception");
 	CHECK_THROWS_WITH(Rational(1, 0), "Divide by zero exception");
 }

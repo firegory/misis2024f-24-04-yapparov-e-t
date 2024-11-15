@@ -8,6 +8,11 @@ TEST_CASE("[complex] - ctor") {
 	CHECK(Complex(1.0) == Complex(1.0, 0.0));
 }
 
+TEST_CASE("[complex] - input output") {
+	CHECK(testOutput("{1;2}"));
+	CHECK(testOutput("{1.2;2.3}"));
+}
+
 TEST_CASE("[complex] - Complex Complex operations") {
 	CHECK(Complex(1, 1) + Complex(2, 2) == Complex(3.0, 3.0));
 	CHECK(Complex(1, 1) - Complex(2, 2) == Complex(-1.0, -1.0));
@@ -38,4 +43,5 @@ TEST_CASE("[complex] - double Complex operations") {
 TEST_CASE("[complex] - excepetions") {
 	CHECK_THROWS_WITH(Complex(1, 1) / Complex(0, 0), "Divide by zero exception");
 	CHECK_THROWS_WITH(Complex(1, 1) / 0, "Divide by zero exception");
+	CHECK_THROWS_WITH(1 / Complex(0, 0), "Divide by zero exception");
 }
