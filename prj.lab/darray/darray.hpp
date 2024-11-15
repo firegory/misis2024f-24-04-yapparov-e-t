@@ -1,5 +1,7 @@
 #include <iosfwd>
 #include<sstream>
+#include <stdarg.h>
+#include<initializer_list>
 
 #ifndef Darray_HPP
 #define Darray_HPP
@@ -15,6 +17,7 @@ private:
 public:
     Darray();
     explicit Darray(const int length);
+    Darray(const std::initializer_list<double> array);
     Darray(const Darray& obj) = default;
 
     Darray& operator=(const Darray&) = default;

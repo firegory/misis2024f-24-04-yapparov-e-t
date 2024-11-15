@@ -3,6 +3,7 @@
 #include <iostream>
 #include<sstream>
 #include<string>
+#include<initializer_list>
 
 
 Darray::Darray() {
@@ -19,6 +20,17 @@ Darray::Darray(const int length) {
 		startAdress[i] = 0;
 	}
 }
+Darray::Darray(const std::initializer_list<double> array)
+{
+	len = array.size();
+	allocatedMemory = len - (len % 8) + 8;
+	startAdress = new double[allocatedMemory];
+	for (int i = 0; i < len; i++)
+	{
+		startAdress[i] = array.begin()[i];
+	}
+}
+
 void Darray::append(const double value) {
 	if (allocatedMemory<=len)
 	{
@@ -37,9 +49,14 @@ int Darray::length() {
 	return len;
 }
 double& Darray::operator[](int ind) {
-	if (ind>=len)
+	if (ind>=len || ind < 0)
 	{
-		std::out_of_range("index out of range");
+		throw std::out_of_range("index out of range");
 	}
 	return startAdress[ind];
+}
+
+Darray::~Darray()
+{
+	delete(startAdress);
 }
