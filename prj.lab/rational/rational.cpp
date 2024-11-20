@@ -37,16 +37,17 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     int num = 0;
     int den = 0;
     istrm >> num >> sep >> den;
-    if (istrm.good())
+    if (Rational::sep == sep && den > 0)
     {
-        if (Rational::sep == sep && den > 0)
+        *this = Rational(num, den);
+        if (!istrm.good())
         {
-            *this = Rational(num, den);
+            istrm.clear();
         }
-        else
-        {
-            istrm.setstate(std::ios_base::failbit);
-        }
+    }
+    else
+    {
+        istrm.setstate(std::ios_base::failbit);
     }
     return istrm;
 }

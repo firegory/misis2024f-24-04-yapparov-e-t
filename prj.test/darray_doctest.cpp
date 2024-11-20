@@ -6,7 +6,7 @@
 #include<iostream>
 #include<sstream>
 
-TEST_CASE("[Rational] - ctor") {
+TEST_CASE("[Darray] - ctor") {
 	CHECK(Darray().length() == 0);
 	CHECK(Darray(1).length() == 1);
 	CHECK(Darray(1)[0] == 0);
@@ -17,11 +17,11 @@ TEST_CASE("[Rational] - ctor") {
 	CHECK(Darray({ 1,2,3 })[2] == 3);
 }
 
-TEST_CASE("[Rational] - input output") {
+TEST_CASE("[Darray] - input output") {
 	
 }
 
-TEST_CASE("[Rational] - excepetions") {
+TEST_CASE("[Darray] - excepetions") {
 	CHECK_THROWS_WITH(Darray(1)[1], "index out of range");
 	CHECK_THROWS_WITH(Darray(1)[-1], "index out of range");
 }

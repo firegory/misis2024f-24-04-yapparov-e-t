@@ -18,9 +18,9 @@ public:
     Darray();
     explicit Darray(const int length);
     Darray(const std::initializer_list<double> array);
-    Darray(const Darray& obj) = default;
+    Darray(const Darray& obj);
 
-    Darray& operator=(const Darray&) = default;
+    Darray& operator=(const Darray& rhs);
 
     int length();
     

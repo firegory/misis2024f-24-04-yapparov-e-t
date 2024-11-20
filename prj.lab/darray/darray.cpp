@@ -30,6 +30,14 @@ Darray::Darray(const std::initializer_list<double> array)
 		startAdress[i] = array.begin()[i];
 	}
 }
+Darray::Darray(const Darray& obj)
+{
+	*this = Darray(obj.len);
+	for (int i = 0; i < len; i++)
+	{
+		this->startAdress[i] = obj.startAdress[i];
+	}
+}
 
 void Darray::append(const double value) {
 	if (allocatedMemory<=len)
@@ -59,4 +67,9 @@ double& Darray::operator[](int ind) {
 Darray::~Darray()
 {
 	delete(startAdress);
+}
+Darray& Darray::operator=(const Darray& rhs)
+{
+	*this = Darray(rhs);
+	return *this;
 }
