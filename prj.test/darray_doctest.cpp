@@ -9,6 +9,7 @@
 TEST_CASE("[Darray] - ctor") {
 	CHECK(Darray().length() == 0);
 	CHECK(Darray(1).length() == 1);
+	CHECK(Darray(8).length() == 8);
 	CHECK(Darray(1)[0] == 0);
 	CHECK(Darray(1000).length() == 1000);
 	CHECK(Darray(1000)[800] == 0);
@@ -24,4 +25,7 @@ TEST_CASE("[Darray] - input output") {
 TEST_CASE("[Darray] - excepetions") {
 	CHECK_THROWS_WITH(Darray(1)[1], "index out of range");
 	CHECK_THROWS_WITH(Darray(1)[-1], "index out of range");
+	CHECK_THROWS_WITH(Darray(1)[1], "index out of range");
+	CHECK_THROWS_WITH(Darray(0), "Can not make an arry with tis length");
+	CHECK_THROWS_WITH(Darray(-1), "Can not make an arry with tis length");
 }

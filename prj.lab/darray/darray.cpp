@@ -12,6 +12,10 @@ Darray::Darray() {
 	startAdress = new double[8];
 }
 Darray::Darray(const int length) {
+	if (length <= 0)
+	{
+		throw std::out_of_range("Can not make an arry with tis length");
+	}
 	len = length;
 	allocatedMemory = length - (length % 8) + 8;
 	startAdress = new double[allocatedMemory];

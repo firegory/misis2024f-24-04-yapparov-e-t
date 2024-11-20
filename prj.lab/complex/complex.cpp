@@ -187,7 +187,7 @@ Complex operator/(const double& lhs, const Complex& rhs)
 
 bool Complex::operator==(const Complex& rhs) const noexcept
 {
-    if(re == rhs.re && im == rhs.im)
+    if(std::abs(re - rhs.re) <= std::numeric_limits<double>().epsilon()*2 && std::abs(im - rhs.im) <= std::numeric_limits<double>().epsilon() * 2)
     {
         return true;
     }

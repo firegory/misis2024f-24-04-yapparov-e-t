@@ -3,6 +3,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
+#include <iostream>
+#include <sstream>
+
 TEST_CASE("[complex] - ctor") {
 	CHECK(Complex() == Complex(0.0, 0.0));
 	CHECK(Complex(1.0) == Complex(1.0, 0.0));
