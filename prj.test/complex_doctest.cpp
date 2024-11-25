@@ -22,6 +22,8 @@ TEST_CASE("[complex] - Complex Complex operations") {
 	CHECK(Complex(1, 1) * Complex(2, 2) == Complex(0.0, 4.0));
 	CHECK(Complex(1, 1) / Complex(2, 2) == Complex(0.5, 0.0));
 	CHECK(-Complex(1, 1) == Complex(-1.0, -1.0));
+	CHECK(Complex(1 + std::numeric_limits<double>().epsilon(), 1) == Complex(1, 1));
+	CHECK(Complex(1 - std::numeric_limits<double>().epsilon(), 1 - std::numeric_limits<double>().epsilon()) == Complex(1, 1));
 	CHECK(Complex(1.0, 2.0) != Complex(1.0, 1.0));
 }
 
@@ -31,6 +33,7 @@ TEST_CASE("[complex] - Complex double operations") {
 	CHECK(Complex(1, 1) * 2 == Complex(2.0, 2.0));
 	CHECK(Complex(1, 1) / 2 == Complex(0.5, 0.5));
 	CHECK(Complex(1.0, 0.0) == 1);
+	CHECK(Complex(1 + std::numeric_limits<double>().epsilon(), 0) == 1);
 	CHECK(Complex(1.0, 1.0) != 1);
 }
 
@@ -40,6 +43,7 @@ TEST_CASE("[complex] - double Complex operations") {
 	CHECK(2 * Complex(1, 1) == Complex(2.0, 2.0));
 	CHECK(2 / Complex(1, 1) == Complex(1.0, -1.0));
 	CHECK(1 == Complex(1.0, 0.0));
+	CHECK(1 == Complex(1 + std::numeric_limits<double>().epsilon(), 0));
 	CHECK(1 != Complex(1.0, 2.0));
 }
 

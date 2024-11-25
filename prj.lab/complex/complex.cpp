@@ -195,11 +195,7 @@ bool Complex::operator==(const Complex& rhs) const noexcept
 }
 bool Complex::operator==(const double& rhs) const noexcept
 {
-    if(re == rhs && im == 0)
-    {
-        return true;
-    }
-    return false;
+    return *this == Complex(rhs, 0);
 }
 bool operator==(const double& lhs, const Complex& rhs) noexcept
 {

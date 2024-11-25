@@ -8,26 +8,23 @@
 
 Darray::Darray() {
 	len = 0;
-	allocatedMemory = 8;
-	startAdress = new double[8];
+	allocatedMemory = 0;
+	startAdress = new double[0];
 }
-Darray::Darray(const int length) {
+Darray::Darray(const ptrdiff_t length) {
 	if (length <= 0)
 	{
 		throw std::out_of_range("Can not make an arry with tis length");
 	}
 	len = length;
-	allocatedMemory = length - (length % 8) + 8;
+	allocatedMemory = length;
 	startAdress = new double[allocatedMemory];
-	for (int i = 0; i < len; i++)
-	{
-		startAdress[i] = 0;
-	}
+	std::memset(startAdress, 0.0, 8*len);
 }
 Darray::Darray(const std::initializer_list<double> array)
 {
 	len = array.size();
-	allocatedMemory = len - (len % 8) + 8;
+	allocatedMemory = len;
 	startAdress = new double[allocatedMemory];
 	for (int i = 0; i < len; i++)
 	{
@@ -36,32 +33,84 @@ Darray::Darray(const std::initializer_list<double> array)
 }
 Darray::Darray(const Darray& obj)
 {
-	*this = Darray(obj.len);
-	for (int i = 0; i < len; i++)
-	{
-		this->startAdress[i] = obj.startAdress[i];
-	}
+	len = obj.len;
+	allocatedMemory = len;
+	startAdress = new double[allocatedMemory];
+	std::copy(obj.startAdress, &obj.startAdress[len], startAdress);
 }
 
-void Darray::append(const double value) {
-	if (allocatedMemory<=len)
+
+void Darray::Resize(const ptrdiff_t size) 
+{
+	if (size < 0)
 	{
-		allocatedMemory += 8;
-		double* temp = new double[allocatedMemory];
-		for (int i = 0; i < len; i++)
-		{
-			temp[i] = startAdress[i];
-		}
-		startAdress = temp;
+		throw std::out_of_range("Can not make an arry with tis length");
 	}
-	startAdress[len] = value;
-	len++;
+	if (size == len)
+	{
+		return;
+	}
+	if (size < len)
+	{
+		double* temp = new double[size];
+		std::copy(startAdress, &startAdress[size], temp);
+		startAdress = temp;
+		allocatedMemory = size;
+		len = size;
+	}
+	else
+	{
+		if (allocatedMemory < size)
+		{
+			if (allocatedMemory*2 < size)
+			{
+				allocatedMemory = size;
+			}
+			else
+			{
+				allocatedMemory *= 2;
+			}
+			double* temp = new double[allocatedMemory];
+			std::copy(startAdress, &startAdress[len], temp);
+			std::memset(&temp[len], 0.0, 8 * (allocatedMemory - len));
+			startAdress = temp;
+		}
+		len = size;
+	}
 }
-int Darray::length() {
+void Darray::Insert(const ptrdiff_t ind, const double value)
+{
+	if (ind > len || ind < 0)
+	{
+		throw std::out_of_range("index out of range");
+	}
+	this->Resize(len + 1);
+	std::copy(&startAdress[ind], &startAdress[len], &startAdress[ind+1]);
+	startAdress[ind] = value;
+
+}
+void Darray::Remove(const ptrdiff_t ind)
+{
+	if (ind >= len || ind < 0)
+	{
+		throw std::out_of_range("index out of range");
+	}
+	std::copy(&startAdress[ind+1], &startAdress[len], &startAdress[ind]);
+	this->Resize(len - 1);
+}
+
+ptrdiff_t Darray::Size() const{
 	return len;
 }
-double& Darray::operator[](int ind) {
+double& Darray::operator[](const ptrdiff_t ind) {
 	if (ind>=len || ind < 0)
+	{
+		throw std::out_of_range("index out of range");
+	}
+	return startAdress[ind];
+}
+const double& Darray::operator[](const ptrdiff_t ind) const {
+	if (ind >= len || ind < 0)
 	{
 		throw std::out_of_range("index out of range");
 	}
@@ -74,6 +123,9 @@ Darray::~Darray()
 }
 Darray& Darray::operator=(const Darray& rhs)
 {
-	*this = Darray(rhs);
+	len = rhs.len;
+	allocatedMemory = len;
+	startAdress = new double[allocatedMemory];
+	std::copy(rhs.startAdress, &rhs.startAdress[len], startAdress);
 	return *this;
 }

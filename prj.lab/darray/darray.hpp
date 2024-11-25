@@ -9,23 +9,28 @@
 class Darray
 {
 private:
-    int len = 0;
-    int allocatedMemory = 8;
+    ptrdiff_t len = 0;
+    ptrdiff_t allocatedMemory = 8;
     double* startAdress;
 
     static const char sep = '/';
 public:
     Darray();
-    explicit Darray(const int length);
+    explicit Darray(const ptrdiff_t length);
     Darray(const std::initializer_list<double> array);
     Darray(const Darray& obj);
 
     Darray& operator=(const Darray& rhs);
 
-    int length();
+    ptrdiff_t Size() const;
     
-    void append(const double value);
-    double& operator[](const int ind);
+    void Resize(const ptrdiff_t size);
+    void Insert(const ptrdiff_t ind, const double value);
+    void Remove(const ptrdiff_t ind);
+
+    double& operator[](const ptrdiff_t ind);
+    const double& operator[](const ptrdiff_t ind) const;
+
 
     ~Darray();
 
