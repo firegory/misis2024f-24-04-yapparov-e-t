@@ -106,7 +106,7 @@ void ArrayD::Remove(const ptrdiff_t ind)
 	this->Resize(len - 1);
 }
 
-ptrdiff_t ArrayD::Size() const{
+ptrdiff_t ArrayD::Size() const noexcept {
 	return len;
 }
 double& ArrayD::operator[](const ptrdiff_t ind) {
@@ -141,7 +141,7 @@ ArrayD& ArrayD::operator=(const ArrayD& rhs)
 	}
 	return *this;
 }
-ArrayD& ArrayD::operator=(ArrayD&& rhs)
+ArrayD& ArrayD::operator=(ArrayD&& rhs) noexcept
 {
 	if (this != &rhs)
 	{

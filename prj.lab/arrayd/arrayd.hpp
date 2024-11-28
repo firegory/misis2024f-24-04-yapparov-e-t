@@ -12,8 +12,6 @@ private:
     ptrdiff_t len = 0;
     ptrdiff_t allocatedMemory = 0;
     double* startAdress;
-
-    static const char sep = '/';
 public:
     ArrayD();
     explicit ArrayD(const ptrdiff_t length);
@@ -21,22 +19,19 @@ public:
     ArrayD(const ArrayD& obj);
     ArrayD(ArrayD&& obj);
     
+    [[nondiscard]] ArrayD& operator=(const ArrayD& rhs);
+    [[nondiscard]] ArrayD& operator=(ArrayD&& rhs) noexcept;
 
-    ArrayD& operator=(const ArrayD& rhs);
-    ArrayD& operator=(ArrayD&& rhs);
-
-    ptrdiff_t Size() const;
+    [[nondiscard]] ptrdiff_t Size() const noexcept;
     
     void Resize(const ptrdiff_t size);
     void Insert(const ptrdiff_t ind, const double value);
     void Remove(const ptrdiff_t ind);
 
-    double& operator[](const ptrdiff_t ind);
-    const double& operator[](const ptrdiff_t ind) const;
-
+    [[nondiscard]] double& operator[](const ptrdiff_t ind);
+    [[nondiscard]] const double& operator[](const ptrdiff_t ind) const;
 
     ~ArrayD();
-
 };
 
 
