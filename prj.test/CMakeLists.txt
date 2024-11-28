@@ -2,9 +2,9 @@ project("rational")
 add_executable("rational_doctest" "rational_doctest.cpp")
 target_link_libraries(rational_doctest rational)
 
-project("darray")
-add_executable("darray_doctest" "darray_doctest.cpp")
-target_link_libraries(darray_doctest darray)
+project("arrayd")
+add_executable("arrayd_doctest" "arrayd_doctest.cpp")
+target_link_libraries(arrayd_doctest arrayd)
 
 project("comlpex_test")
 add_executable("complex_doctest" "complex_doctest.cpp")

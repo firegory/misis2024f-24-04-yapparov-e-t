@@ -3,10 +3,10 @@
 #include <stdarg.h>
 #include<initializer_list>
 
-#ifndef Darray_HPP
-#define Darray_HPP
+#ifndef arrayd_HPP
+#define arrayd_HPP
 
-class Darray
+class ArrayD
 {
 private:
     ptrdiff_t len = 0;
@@ -15,12 +15,12 @@ private:
 
     static const char sep = '/';
 public:
-    Darray();
-    explicit Darray(const ptrdiff_t length);
-    Darray(const std::initializer_list<double> array);
-    Darray(const Darray& obj);
+    ArrayD();
+    explicit ArrayD(const ptrdiff_t length);
+    ArrayD(const std::initializer_list<double> array);
+    ArrayD(const ArrayD& obj);
 
-    Darray& operator=(const Darray& rhs);
+    ArrayD& operator=(const ArrayD& rhs);
 
     ptrdiff_t Size() const;
     
@@ -32,10 +32,10 @@ public:
     const double& operator[](const ptrdiff_t ind) const;
 
 
-    ~Darray();
+    ~ArrayD();
 
 };
 
 
 
-#endif // !Darray_HPP
+#endif // !ArrayD_HPP
