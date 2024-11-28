@@ -6,6 +6,10 @@ project("arrayd")
 add_executable("arrayd_doctest" "arrayd_doctest.cpp")
 target_link_libraries(arrayd_doctest arrayd)
 
+project("arrayt")
+add_executable("arrayt_doctest" "arrayt_doctest.cpp")
+target_link_libraries(arrayt_doctest arrayt)
+
 project("comlpex_test")
 add_executable("complex_doctest" "complex_doctest.cpp")
 target_link_libraries(complex_doctest complex)

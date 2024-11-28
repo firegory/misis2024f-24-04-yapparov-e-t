@@ -17,19 +17,19 @@ public:
     explicit ArrayD(const ptrdiff_t length);
     ArrayD(const std::initializer_list<double> array);
     ArrayD(const ArrayD& obj);
-    ArrayD(ArrayD&& obj);
+    ArrayD(ArrayD&& obj) noexcept;
     
-    [[nondiscard]] ArrayD& operator=(const ArrayD& rhs);
-    [[nondiscard]] ArrayD& operator=(ArrayD&& rhs) noexcept;
+    [[nodiscard]] ArrayD& operator=(const ArrayD& rhs);
+    [[nodiscard]] ArrayD& operator=(ArrayD&& rhs) noexcept;
 
-    [[nondiscard]] ptrdiff_t Size() const noexcept;
+    [[nodiscard]] ptrdiff_t Size() const noexcept;
     
     void Resize(const ptrdiff_t size);
     void Insert(const ptrdiff_t ind, const double value);
     void Remove(const ptrdiff_t ind);
 
-    [[nondiscard]] double& operator[](const ptrdiff_t ind);
-    [[nondiscard]] const double& operator[](const ptrdiff_t ind) const;
+    [[nodiscard]] double& operator[](const ptrdiff_t ind);
+    [[nodiscard]] const double& operator[](const ptrdiff_t ind) const;
 
     ~ArrayD();
 };

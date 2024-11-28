@@ -1,27 +1,31 @@
-﻿#include "arrayd.hpp"
+﻿#include "arrayt.hpp"
 
 #include <iostream>
 #include<sstream>
 #include<string>
 #include<initializer_list>
 
-
-ArrayD::ArrayD() {
+/*template <class T>
+ArrayT<T>::ArrayT()
+{
 	len = 0;
 	allocatedMemory = 0;
-	startAdress = new double[0];
+	startAdress = new T[0];
 }
-ArrayD::ArrayD(const ptrdiff_t length) {
+template <class T>
+ArrayT<T>::ArrayT(const ptrdiff_t length)
+{
 	if (length <= 0)
 	{
 		throw std::out_of_range("Can not make an arry with tis length");
 	}
 	len = length;
 	allocatedMemory = length;
-	startAdress = new double[allocatedMemory];
-	std::memset(startAdress, 0.0, 8*len);
+	startAdress = new T[allocatedMemory];
+	std::memset(startAdress, 0, sizeof(T) * len);
 }
-ArrayD::ArrayD(const std::initializer_list<double> array)
+template <class T>
+ArrayT<T>::ArrayT(const std::initializer_list<T> array)
 {
 	len = array.size();
 	allocatedMemory = len;
@@ -31,14 +35,16 @@ ArrayD::ArrayD(const std::initializer_list<double> array)
 		startAdress[i] = array.begin()[i];
 	}
 }
-ArrayD::ArrayD(const ArrayD& obj)
+template <class T>
+ArrayT<T>::ArrayT(const ArrayT& obj)
 {
 	len = obj.len;
 	allocatedMemory = obj.allocatedMemory;
-	startAdress = new double[allocatedMemory];
+	startAdress = new T[allocatedMemory];
 	std::copy(obj.startAdress, obj.startAdress + len, startAdress);
 }
-ArrayD::ArrayD(ArrayD&& obj) noexcept
+template <class T>
+ArrayT<T>::ArrayT(ArrayT&& obj)
 {
 	std::swap(len, obj.len);
 	std::swap(allocatedMemory, obj.allocatedMemory);
@@ -46,8 +52,8 @@ ArrayD::ArrayD(ArrayD&& obj) noexcept
 	obj.startAdress = nullptr;
 }
 
-
-void ArrayD::Resize(const ptrdiff_t size) 
+template <class T>
+void ArrayT<T>::Resize(const ptrdiff_t size) 
 {
 	if (size < 0)
 	{
@@ -59,7 +65,7 @@ void ArrayD::Resize(const ptrdiff_t size)
 	}
 	if (size < len)
 	{
-		double* temp = new double[size];
+		T* temp = new T[size];
 		std::copy(startAdress, startAdress + size, temp);
 		startAdress = temp;
 		allocatedMemory = size;
@@ -77,15 +83,16 @@ void ArrayD::Resize(const ptrdiff_t size)
 			{
 				allocatedMemory *= 2;
 			}
-			double* temp = new double[allocatedMemory];
+			T* temp = new T[allocatedMemory];
 			std::copy(startAdress, startAdress + len, temp);
-			std::memset(&temp[len], 0.0, 8 * (allocatedMemory - len));
+			std::memset(&temp[len], 0, sizeof(T) * (allocatedMemory - len));
 			startAdress = temp;
 		}
 		len = size;
 	}
 }
-void ArrayD::Insert(const ptrdiff_t ind, const double value)
+template <class T>
+void ArrayT<T>::Insert(const ptrdiff_t ind, const T value)
 {
 	if (ind > len || ind < 0)
 	{
@@ -96,7 +103,8 @@ void ArrayD::Insert(const ptrdiff_t ind, const double value)
 	startAdress[ind] = value;
 
 }
-void ArrayD::Remove(const ptrdiff_t ind)
+template <class T>
+void ArrayT<T>::Remove(const ptrdiff_t ind)
 {
 	if (ind >= len || ind < 0)
 	{
@@ -105,18 +113,20 @@ void ArrayD::Remove(const ptrdiff_t ind)
 	std::copy(&startAdress[ind + 1], startAdress + len, &startAdress[ind]);
 	this->Resize(len - 1);
 }
-
-ptrdiff_t ArrayD::Size() const noexcept {
+template <class T>
+ptrdiff_t ArrayT<T>::Size() const noexcept {
 	return len;
 }
-double& ArrayD::operator[](const ptrdiff_t ind) {
+template <class T>
+T& ArrayT<T>::operator[](const ptrdiff_t ind) {
 	if (ind>=len || ind < 0)
 	{
 		throw std::out_of_range("index out of range");
 	}
 	return startAdress[ind];
 }
-const double& ArrayD::operator[](const ptrdiff_t ind) const {
+template <class T>
+const T& ArrayT<T>::operator[](const ptrdiff_t ind) const {
 	if (ind >= len || ind < 0)
 	{
 		throw std::out_of_range("index out of range");
@@ -124,24 +134,26 @@ const double& ArrayD::operator[](const ptrdiff_t ind) const {
 	return startAdress[ind];
 }
 
-ArrayD::~ArrayD()
+template <class T>
+ArrayT<T>::~ArrayT()
 {
 	delete(startAdress);
 }
 
-
-ArrayD& ArrayD::operator=(const ArrayD& rhs)
+template <class T>
+ArrayT<T>& ArrayT<T>::operator=(const ArrayT& rhs)
 {
 	if (this != &rhs)
 	{
 		len = rhs.len;
 		allocatedMemory = len;
-		startAdress = new double[allocatedMemory];
+		startAdress = new T[allocatedMemory];
 		std::copy(rhs.startAdress, rhs.startAdress + len, startAdress);
 	}
 	return *this;
 }
-ArrayD& ArrayD::operator=(ArrayD&& rhs) noexcept
+template <class T>
+ArrayT<T>& ArrayT<T>::operator=(ArrayT&& rhs) noexcept
 {
 	if (this != &rhs)
 	{
@@ -151,4 +163,4 @@ ArrayD& ArrayD::operator=(ArrayD&& rhs) noexcept
 		rhs.startAdress = nullptr;
 	}
 	return *this;
-}
+}*/
