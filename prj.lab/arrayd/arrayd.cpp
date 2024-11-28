@@ -34,9 +34,16 @@ ArrayD::ArrayD(const std::initializer_list<double> array)
 ArrayD::ArrayD(const ArrayD& obj)
 {
 	len = obj.len;
-	allocatedMemory = len;
+	allocatedMemory = obj.allocatedMemory;
 	startAdress = new double[allocatedMemory];
 	std::copy(obj.startAdress, obj.startAdress + len, startAdress);
+}
+ArrayD::ArrayD(ArrayD&& obj)
+{
+	std::swap(len, obj.len);
+	std::swap(allocatedMemory, obj.allocatedMemory);
+	startAdress = obj.startAdress;
+	obj.startAdress = nullptr;
 }
 
 
@@ -121,11 +128,27 @@ ArrayD::~ArrayD()
 {
 	delete(startAdress);
 }
+
+
 ArrayD& ArrayD::operator=(const ArrayD& rhs)
 {
-	len = rhs.len;
-	allocatedMemory = len;
-	startAdress = new double[allocatedMemory];
-	std::copy(rhs.startAdress, rhs.startAdress + len, startAdress);
+	if (this != &rhs)
+	{
+		len = rhs.len;
+		allocatedMemory = len;
+		startAdress = new double[allocatedMemory];
+		std::copy(rhs.startAdress, rhs.startAdress + len, startAdress);
+	}
+	return *this;
+}
+ArrayD& ArrayD::operator=(ArrayD&& rhs)
+{
+	if (this != &rhs)
+	{
+		std::swap(len, rhs.len);
+		std::swap(allocatedMemory, rhs.allocatedMemory);
+		startAdress = rhs.startAdress;
+		rhs.startAdress = nullptr;
+	}
 	return *this;
 }

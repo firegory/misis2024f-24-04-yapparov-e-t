@@ -10,7 +10,7 @@ class ArrayD
 {
 private:
     ptrdiff_t len = 0;
-    ptrdiff_t allocatedMemory = 8;
+    ptrdiff_t allocatedMemory = 0;
     double* startAdress;
 
     static const char sep = '/';
@@ -19,8 +19,11 @@ public:
     explicit ArrayD(const ptrdiff_t length);
     ArrayD(const std::initializer_list<double> array);
     ArrayD(const ArrayD& obj);
+    ArrayD(ArrayD&& obj);
+    
 
     ArrayD& operator=(const ArrayD& rhs);
+    ArrayD& operator=(ArrayD&& rhs);
 
     ptrdiff_t Size() const;
     

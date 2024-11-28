@@ -58,10 +58,20 @@ TEST_CASE("[ArrayD] - ctor") {
 	CHECK(ArrayD({ 1,2,3 })[0] == 1);
 	CHECK(ArrayD({ 1,2,3 })[1] == 2);
 	CHECK(ArrayD({ 1,2,3 })[2] == 3);
-}
 
-TEST_CASE("[ArrayD] - input output") {
-	
+	arr = ArrayD({ 1,2,3 });
+	ArrayD arr2(std::move(arr));
+	CHECK(arr2[0] == 1);
+	CHECK(arr2[1] == 2);
+	CHECK(arr2[2] == 3);
+	CHECK(arr.Size() == 0);
+
+
+	arr = std::move(arr2);
+	CHECK(arr[0] == 1);
+	CHECK(arr[1] == 2);
+	CHECK(arr[2] == 3);
+	CHECK(arr2.Size() == 0);
 }
 
 TEST_CASE("[ArrayD] - excepetions") {
