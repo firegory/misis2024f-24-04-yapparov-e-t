@@ -14,6 +14,20 @@ TEST_CASE("[complex] - ctor") {
 TEST_CASE("[complex] - input output") {
 	CHECK(testOutput("{1;2}"));
 	CHECK(testOutput("{1.2;2.3}"));
+	CHECK(testOutput("{-1.2;2.3}"));
+	CHECK(testOutput("{1.2;-2.3}"));
+
+
+	CHECK(!testOutput("{1.2; 2.3}"));
+	CHECK(!testOutput("{1.2 ;2.3}"));
+	CHECK(!testOutput("{ 1.2;2.3}"));
+	CHECK(!testOutput("{1.2;2.3 }"));
+	CHECK(!testOutput("{1.2;2 .3}"));
+	CHECK(!testOutput("{1.2; 2 3}"));
+	CHECK(!testOutput("{- 1.2;2.3}"));
+	CHECK(!testOutput("{ -1.2;2.3}"));
+	CHECK(!testOutput("{1.2;- 2.3}"));
+	CHECK(!testOutput("{1.2; -2.3}"));
 }
 
 TEST_CASE("[complex] - Complex Complex operations") {

@@ -109,7 +109,7 @@ void checkType(T variable)
 		{
 			CHECK(arr5[j] == j + 1);
 		}
-		CHECK_THROWS_WITH(arr5[i + 1], "index out of range");
+		CHECK_THROWS_WITH(arr5[i], "index out of range");
 	}
 
 	CHECK_THROWS_WITH(ArrayT<T>(1)[-1], "index out of range");

@@ -36,7 +36,38 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     char sep = ' ';
     int num = 0;
     int den = 0;
-    istrm >> num >> sep >> den;
+    bool minus = false;
+    if (istrm.peek() == '-')
+    {
+        minus = true;
+        istrm.get();
+    }
+    if (!isdigit(istrm.peek()))
+    {
+        istrm.setstate(std::ios_base::failbit);
+        return istrm;
+    }
+    istrm >> num;
+    if (minus)
+    {
+        num *= -1; minus = false;
+    }
+    sep = istrm.get();
+    if (istrm.peek() == '-')
+    {
+        minus = true;
+        istrm.get();
+    }
+    if (!isdigit(istrm.peek()))
+    {
+        istrm.setstate(std::ios_base::failbit);
+        return istrm;
+    }
+    istrm >> den;
+    if (minus)
+    {
+        den *= -1; minus = false;
+    }
     if (Rational::sep == sep && den > 0)
     {
         *this = Rational(num, den);

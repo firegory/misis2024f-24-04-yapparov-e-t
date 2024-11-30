@@ -24,9 +24,42 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     char start = ' ';
     char sep = ' ';
     char end = ' ';
+    bool minus = false;
     double real = 0;
     double imaginary = 0;
-    istrm >> start >> real >> sep >> imaginary >> end;
+    start = istrm.get();
+    if (istrm.peek() == '-')
+    {
+        minus = true;
+        istrm.get();
+    }
+    if (!isdigit(istrm.peek()))
+    {
+        istrm.setstate(std::ios_base::failbit);    
+        return istrm;
+    }
+    istrm >> real;
+    if (minus)
+    {
+        real *= -1; minus = false;
+    }
+    sep = istrm.get();
+    if (istrm.peek() == '-')
+    {
+        minus = true;
+        istrm.get();
+    }
+    if (!isdigit(istrm.peek()))
+    {
+        istrm.setstate(std::ios_base::failbit);
+        return istrm;
+    }
+    istrm >> imaginary;
+    if (minus)
+    {
+        real *= -1; minus = false;
+    }
+    end = istrm.get();
     if (istrm.good())
     {
         if (Complex::start == start && Complex::sep == sep && Complex::end == end)
@@ -219,13 +252,13 @@ bool testOutput(const std::string& s) noexcept
     std::istringstream istrm(s);
     Complex n;
     istrm >> n;
-    if (istrm.good())
-    {
-        std::cout << "Reading success. " << s << " " << n << "\n";
-    }
-    else
-    {
-        std::cout << "Reading error. " << s << " " << n << "\n";
-    }
+    //if (istrm.good())
+    //{
+    //    std::cout << "Reading success. " << s << " " << n << "\n";
+    //}
+    //else
+    //{
+    //    std::cout << "Reading error. " << s << " " << n << "\n";
+    //}
     return istrm.good();
 }
