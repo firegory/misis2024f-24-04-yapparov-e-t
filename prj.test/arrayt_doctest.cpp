@@ -27,6 +27,7 @@ void checkType(T variable)
 	arr2[1] = 2;
 	arr2[2] = 3;
 
+
 	arr2.Insert(0, 10);
 	CHECK(arr2[0] == 10);
 	CHECK(arr2[1] == 1);
@@ -91,8 +92,25 @@ void checkType(T variable)
 	CHECK_THROWS_WITH(arr2[3], "index out of range");
 	CHECK(arr5.Size() == 0);
 
+	for (int i = 0; i < 100; i++)
+	{
+		arr5.Insert(i, i + 1);
+		for (int j = 0; j <= i; j++)
+		{
+			CHECK(arr5[j] == j + 1);
+		}
+		CHECK_THROWS_WITH(arr5[i+1], "index out of range");
+	}
 
-
+	for (int i = 99; i >= 0; i--)
+	{
+		arr5.Remove(i);
+		for (int j = 0; j < i; j++)
+		{
+			CHECK(arr5[j] == j + 1);
+		}
+		CHECK_THROWS_WITH(arr5[i + 1], "index out of range");
+	}
 
 	CHECK_THROWS_WITH(ArrayT<T>(1)[-1], "index out of range");
 	CHECK_THROWS_WITH(ArrayT<T>(0), "Can not make an arry with tis length");
