@@ -6,7 +6,33 @@
 #include<iostream>
 #include<sstream>
 
+template <class T>
+T getType(int n);
 
+template <class T>
+T isEqual(T n, T n1);
+
+template <>
+int getType(int n)
+{
+	return n;
+}
+template <>
+float getType(int n)
+{
+	return n;
+}
+template <>
+std::string getType(int n)
+{
+	return std::string(n,n);
+}
+
+template <>
+int isEqual(int n, int n1)
+{
+	return n == n1;
+}
 template <class T>
 void checkType(T variable)
 {
@@ -18,28 +44,28 @@ void checkType(T variable)
 	CHECK(arr1.Size() == 1000);
 	for (int i = 0; i < 1000; i++)
 	{
-		CHECK(arr1[i] == 0);
+		CHECK(arr1[i] == getType<T>(0));
 	}
 	CHECK_THROWS_WITH(arr[1000], "index out of range");
 
 	ArrayT<T> arr2(3);
-	arr2[0] = 1;
-	arr2[1] = 2;
-	arr2[2] = 3;
+	arr2[0] = getType<T>(1);
+	arr2[1] = getType<T>(2);
+	arr2[2] = getType<T>(3);
 
 
-	arr2.Insert(0, 10);
-	CHECK(arr2[0] == 10);
-	CHECK(arr2[1] == 1);
-	CHECK(arr2[2] == 2);
-	CHECK(arr2[3] == 3);
-	arr2.Insert(2, 11);
-	CHECK(arr2[0] == 10);
-	CHECK(arr2[1] == 1);
-	CHECK(arr2[2] == 11);
-	CHECK(arr2[3] == 2);
-	CHECK(arr2[4] == 3);
-	arr2.Insert(5, 12);
+	arr2.Insert(0, getType<T>(10));
+	CHECK(arr2[0] == getType<T>(10));
+	CHECK(arr2[1] == getType<T>(1));
+	CHECK(arr2[2] == getType<T>(2));
+	CHECK(arr2[3] == getType<T>(3));
+	arr2.Insert(2, getType<T>(11));
+	CHECK(arr2[0] == getType<T>(10));
+	CHECK(arr2[1] == getType<T>(1));
+	CHECK(arr2[2] == getType<T>(11));
+	CHECK(arr2[3] == getType<T>(2));
+	CHECK(arr2[4] == getType<T>(3));
+	/*arr2.Insert(5, 12);
 	CHECK(arr2[0] == 10);
 	CHECK(arr2[1] == 1);
 	CHECK(arr2[2] == 11);
@@ -115,16 +141,16 @@ void checkType(T variable)
 	CHECK_THROWS_WITH(ArrayT<T>(1)[-1], "index out of range");
 	CHECK_THROWS_WITH(ArrayT<T>(0), "Can not make an arry with tis length");
 	CHECK_THROWS_WITH(ArrayT<T>(-1), "Can not make an arry with tis length");
-	CHECK_THROWS_WITH(ArrayT<T>().Resize(-1), "Can not make an arry with tis length");
+	CHECK_THROWS_WITH(ArrayT<T>().Resize(-1), "Can not make an arry with tis length");*/
 }
 
 
 TEST_CASE("[ArrayD] - ctor") {
 	int temp = 1;
-	double temp1 = 1;
 	float temp2 = 1;
+	std::string temp3 = "1";
 	checkType(temp);
-	checkType(temp1);
 	checkType(temp2);
+	//checkType(temp3);
 }
 

@@ -3,9 +3,10 @@
 #include <iostream>
 #include<sstream>
 #include<string>
+#include<cstdint>
 
 
-int greatestCommonDivisor(int a, int b) {
+int32_t greatestCommonDivisor(int32_t a, int32_t b) {
     if (a < b) {
         std::swap(a, b);
     }
@@ -34,8 +35,8 @@ std::ostream& Rational::writeTo(std::ostream& ostrm) const noexcept
 std::istream& Rational::readFrom(std::istream& istrm) noexcept
 {
     char sep = ' ';
-    int num = 0;
-    int den = 0;
+    int32_t num = 0;
+    int32_t den = 0;
     bool minus = false;
     if (istrm.peek() == '-')
     {
@@ -84,16 +85,16 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
 }
 
 
-Rational::Rational(const int numerator) :
+Rational::Rational(const int32_t numerator) :
     Rational(numerator, 1)
 {}
-Rational::Rational(const int num, const int den)
+Rational::Rational(const int32_t num, const int32_t den)
 {
     if (den == 0)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    int gcd = greatestCommonDivisor(abs(num), abs(den));
+    int32_t gcd = greatestCommonDivisor(abs(num), abs(den));
     if (den < 0)
     {
         numerator = num / gcd * -1;
@@ -105,11 +106,11 @@ Rational::Rational(const int num, const int den)
         denominator = den / gcd;
     }
 }
-int Rational::num()
+int32_t Rational::num()
 {
     return numerator;
 }
-int Rational::den()
+int32_t Rational::den()
 {
     return denominator;
 }
@@ -121,13 +122,13 @@ Rational Rational::operator-() const noexcept
 
 Rational& Rational::operator+=(const Rational& rhs) noexcept
 {
-    int gcd = greatestCommonDivisor(denominator, rhs.denominator);
+    int32_t gcd = greatestCommonDivisor(denominator, rhs.denominator);
     numerator *= rhs.denominator / gcd;
     numerator += rhs.numerator * denominator / gcd;
     denominator *= rhs.denominator / gcd;
     return *this;
 }
-Rational& Rational::operator+=(const int rhs)  noexcept
+Rational& Rational::operator+=(const int32_t rhs)  noexcept
 {
     *this += Rational(rhs);
     return *this;
@@ -138,13 +139,13 @@ Rational operator+(const Rational& lhs, const Rational& rhs) noexcept
     t += rhs;
     return t;
 }
-Rational operator+(const Rational& lhs, const int& rhs) noexcept
+Rational operator+(const Rational& lhs, const int32_t& rhs) noexcept
 {
     Rational t(lhs);
     t += rhs;
     return t;
 }
-Rational operator+(const int& lhs, const Rational& rhs) noexcept
+Rational operator+(const int32_t& lhs, const Rational& rhs) noexcept
 {
     Rational t(lhs);
     t += rhs;
@@ -156,7 +157,7 @@ Rational& Rational::operator-=(const Rational& rhs) noexcept
     *this += -rhs;
     return *this;
 }
-Rational& Rational::operator-=(const int rhs) noexcept
+Rational& Rational::operator-=(const int32_t rhs) noexcept
 {
     *this -= Rational(rhs);
     return *this;
@@ -167,13 +168,13 @@ Rational operator-(const Rational& lhs, const Rational& rhs) noexcept
     t -= rhs;
     return t;
 }
-Rational operator-(const Rational& lhs, const int& rhs) noexcept
+Rational operator-(const Rational& lhs, const int32_t& rhs) noexcept
 {
     Rational t(lhs);
     t -= rhs;
     return t;
 }
-Rational operator-(const int& lhs, const Rational& rhs) noexcept
+Rational operator-(const int32_t& lhs, const Rational& rhs) noexcept
 {
     Rational t(lhs);
     t -= rhs;
@@ -184,12 +185,12 @@ Rational& Rational::operator*=(const Rational& rhs) noexcept
 {
     numerator *= rhs.numerator;
     denominator *= rhs.denominator;
-    int gcd = greatestCommonDivisor(abs(numerator), denominator);
+    int32_t gcd = greatestCommonDivisor(abs(numerator), denominator);
     numerator /= gcd;
     denominator /= gcd;
     return *this;
 }
-Rational& Rational::operator*=(const int rhs) noexcept
+Rational& Rational::operator*=(const int32_t rhs) noexcept
 {
     *this *= Rational(rhs);
     return *this;
@@ -200,13 +201,13 @@ Rational operator*(const Rational& lhs, const Rational& rhs) noexcept
     t *= rhs;
     return t;
 }
-Rational operator*(const Rational& lhs, const int& rhs) noexcept
+Rational operator*(const Rational& lhs, const int32_t& rhs) noexcept
 {
     Rational t(lhs);
     t *= rhs;
     return t;
 }
-Rational operator*(const int& lhs, const Rational& rhs) noexcept
+Rational operator*(const int32_t& lhs, const Rational& rhs) noexcept
 {
     Rational t(lhs);
     t *= rhs;
@@ -231,7 +232,7 @@ Rational& Rational::operator/=(const Rational& rhs)
     *this *= t;
     return *this;
 }
-Rational& Rational::operator/=(const int rhs)
+Rational& Rational::operator/=(const int32_t rhs)
 {
     *this /= Rational(rhs);
     return *this;
@@ -242,13 +243,13 @@ Rational operator/(const Rational& lhs, const Rational& rhs)
     t /= rhs;
     return t;
 }
-Rational operator/(const Rational& lhs, const int& rhs)
+Rational operator/(const Rational& lhs, const int32_t& rhs)
 {
     Rational t(lhs);
     t /= rhs;
     return t;
 }
-Rational operator/(const int& lhs, const Rational& rhs)
+Rational operator/(const int32_t& lhs, const Rational& rhs)
 {
     Rational t(lhs);
     t /= rhs;
@@ -263,7 +264,7 @@ bool Rational::operator==(const Rational& rhs) const noexcept
     }
     return false;
 }
-bool Rational::operator==(const int& rhs) const noexcept
+bool Rational::operator==(const int32_t& rhs) const noexcept
 {
     if (numerator == rhs && denominator == 1)
     {
@@ -271,7 +272,7 @@ bool Rational::operator==(const int& rhs) const noexcept
     }
     return false;
 }
-bool operator==(const int& lhs, const Rational& rhs) noexcept
+bool operator==(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return rhs == lhs;
 }
@@ -279,18 +280,18 @@ bool Rational::operator!=(const Rational& rhs) const noexcept
 {
     return !(*this == rhs);
 }
-bool Rational::operator!=(const int& rhs) const noexcept
+bool Rational::operator!=(const int32_t& rhs) const noexcept
 {
     return !(*this == rhs);
 }
-bool operator!=(const int& lhs, const Rational& rhs) noexcept
+bool operator!=(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return !(rhs == lhs);
 }
 
 bool Rational::operator>(const Rational& rhs) const noexcept
 {
-    int gcd = greatestCommonDivisor(denominator, rhs.denominator);
+    int32_t gcd = greatestCommonDivisor(denominator, rhs.denominator);
     if (numerator * rhs.denominator / gcd > rhs.numerator * denominator / gcd)
     {
         return true;
@@ -310,36 +311,36 @@ bool Rational::operator<=(const Rational& rhs) const noexcept
     return (*this < rhs || *this == rhs);
 }
 
-bool Rational::operator>(const int& rhs) const noexcept
+bool Rational::operator>(const int32_t& rhs) const noexcept
 {
     return *this > Rational(rhs);
 }
-bool Rational::operator>=(const int& rhs) const noexcept
+bool Rational::operator>=(const int32_t& rhs) const noexcept
 {
     return *this >= Rational(rhs);
 }
-bool Rational::operator<(const int& rhs) const noexcept
+bool Rational::operator<(const int32_t& rhs) const noexcept
 {
     return *this < Rational(rhs);
 }
-bool Rational::operator<=(const int& rhs) const noexcept
+bool Rational::operator<=(const int32_t& rhs) const noexcept
 {
     return *this <= Rational(rhs);
 }
 
-bool operator>(const int& lhs, const Rational& rhs) noexcept
+bool operator>(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return rhs < lhs;
 }
-bool operator>=(const int& lhs, const Rational& rhs) noexcept
+bool operator>=(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return rhs <= lhs;
 }
-bool operator<(const int& lhs, const Rational& rhs) noexcept
+bool operator<(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return rhs > lhs;
 }
-bool operator<=(const int& lhs, const Rational& rhs) noexcept
+bool operator<=(const int32_t& lhs, const Rational& rhs) noexcept
 {
     return rhs >= lhs;
 }

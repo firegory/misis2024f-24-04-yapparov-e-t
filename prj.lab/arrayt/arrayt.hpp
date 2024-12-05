@@ -19,7 +19,7 @@ public:
     {
         len = 0;
         allocatedMemory = 0;
-        startAdress =std::make_unique<T[]>(0);
+        startAdress = std::make_unique<T[]>(0);
     }
     explicit ArrayT(const ptrdiff_t length)
     {
@@ -64,7 +64,7 @@ public:
             len = rhs.len;
             allocatedMemory = len;
             startAdress =std::make_unique<T[]>(allocatedMemory);
-            std::copy(rhs.startAdress, rhs.startAdress + len, startAdress);
+            std::copy(&rhs.startAdress[0], &rhs.startAdress[0] + len, &startAdress[0]);
         }
         return *this;
     }
@@ -97,12 +97,12 @@ public:
         }
         if (size < len)
         {
-            T* temp = new T[size];
-            std::copy(&startAdress[0], &startAdress[0] + size, temp);
-            startAdress.release();
-            startAdress.reset(temp);
+            std::unique_ptr<T[]> temp = std::make_unique<T[]>(size);
+            std::copy(&startAdress[0], &startAdress[0] + size, &temp[0]);
+            std::swap(temp, startAdress);
             allocatedMemory = size;
             len = size;
+            temp.release();
         }
         else
         {
@@ -116,11 +116,11 @@ public:
                 {
                     allocatedMemory *= 2;
                 }
-                T* temp = new T[allocatedMemory];
-                std::copy(&startAdress[0], &startAdress[0] + len, temp);
+                std::unique_ptr<T[]> temp = std::make_unique<T[]>(allocatedMemory);
+                std::copy(&startAdress[0], &startAdress[0] + len, &temp[0]);
                 std::memset(&temp[len], 0, sizeof(T) * (allocatedMemory - len));
-                startAdress.release();
-                startAdress.reset(temp);
+                std::swap(temp, startAdress);
+                temp.release();
             }
             len = size;
         }
