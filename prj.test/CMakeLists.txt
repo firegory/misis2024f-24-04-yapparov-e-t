@@ -10,6 +10,10 @@ project("arrayt")
 add_executable("arrayt_doctest" "arrayt_doctest.cpp")
 target_link_libraries(arrayt_doctest arrayt)
 
+project("stackl")
+add_executable("stackl_doctest" "stackl_doctest.cpp")
+target_link_libraries(stackl_doctest stackl)
+
 project("comlpex_test")
 add_executable("complex_doctest" "complex_doctest.cpp")
 target_link_libraries(complex_doctest complex)
