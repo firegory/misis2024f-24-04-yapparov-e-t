@@ -6,149 +6,156 @@
 #include<initializer_list>
 
 
-QueueA::QueueA() {
-	len = 0;
-	allocatedMemory = 0;
-	startAdress = new double[0];
-}
-QueueA::QueueA(const ptrdiff_t length) {
-	if (length <= 0)
-	{
-		throw std::out_of_range("Can not make an arry with tis length");
-	}
-	len = length;
-	allocatedMemory = length;
-	startAdress = new double[allocatedMemory];
-	std::memset(startAdress, 0.0, 8*len);
-}
-QueueA::QueueA(const std::initializer_list<double> array)
-{
-	len = array.size();
-	allocatedMemory = len;
-	startAdress = new double[allocatedMemory];
-	for (int i = 0; i < len; i++)
-	{
-		startAdress[i] = array.begin()[i];
-	}
-}
 QueueA::QueueA(const QueueA& obj)
 {
-	len = obj.len;
-	allocatedMemory = obj.allocatedMemory;
-	startAdress = new double[allocatedMemory];
-	std::copy(obj.startAdress, obj.startAdress + len, startAdress);
+	if (!obj.empty)
+	{
+		allocatedMemory = obj.allocatedMemory;
+		head = obj.head;
+		tail = obj.tail;
+		if (startAdress != nullptr)
+		{
+			delete(startAdress);
+		}
+		startAdress = new uint8_t[allocatedMemory];
+		std::copy(obj.startAdress, obj.startAdress + allocatedMemory, startAdress);
+		empty = false;
+	}
 }
 QueueA::QueueA(QueueA&& obj) noexcept
 {
-	std::swap(len, obj.len);
-	std::swap(allocatedMemory, obj.allocatedMemory);
-	startAdress = obj.startAdress;
-	obj.startAdress = nullptr;
-}
-
-
-void QueueA::Resize(const ptrdiff_t size) 
-{
-	if (size < 0)
+	if (!obj.empty)
 	{
-		throw std::out_of_range("Can not make an arry with tis length");
-	}
-	if (size == len)
-	{
-		return;
-	}
-	if (size < len)
-	{
-		double* temp = new double[size];
-		std::copy(startAdress, startAdress + size, temp);
-		startAdress = temp;
-		allocatedMemory = size;
-		len = size;
-	}
-	else
-	{
-		if (allocatedMemory < size)
-		{
-			if (allocatedMemory*2 < size)
-			{
-				allocatedMemory = size;
-			}
-			else
-			{
-				allocatedMemory *= 2;
-			}
-			double* temp = new double[allocatedMemory];
-			std::copy(startAdress, startAdress + len, temp);
-			std::memset(&temp[len], 0.0, 8 * (allocatedMemory - len));
-			startAdress = temp;
-		}
-		len = size;
+		std::swap(allocatedMemory, obj.allocatedMemory);
+		std::swap(head, obj.head);
+		std::swap(tail, obj.tail);
+		std::swap(startAdress, obj.startAdress);
+		std::swap(empty, obj.empty);
 	}
 }
-void QueueA::Insert(const ptrdiff_t ind, const double value)
-{
-	if (ind > len || ind < 0)
-	{
-		throw std::out_of_range("index out of range");
-	}
-	this->Resize(len + 1);
-	std::copy(&startAdress[ind], startAdress + len, &startAdress[ind + 1]);
-	startAdress[ind] = value;
-
-}
-void QueueA::Remove(const ptrdiff_t ind)
-{
-	if (ind >= len || ind < 0)
-	{
-		throw std::out_of_range("index out of range");
-	}
-	std::copy(&startAdress[ind + 1], startAdress + len, &startAdress[ind]);
-	this->Resize(len - 1);
-}
-
-ptrdiff_t QueueA::Size() const noexcept {
-	return len;
-}
-double& QueueA::operator[](const ptrdiff_t ind) {
-	if (ind>=len || ind < 0)
-	{
-		throw std::out_of_range("index out of range");
-	}
-	return startAdress[ind];
-}
-const double& QueueA::operator[](const ptrdiff_t ind) const {
-	if (ind >= len || ind < 0)
-	{
-		throw std::out_of_range("index out of range");
-	}
-	return startAdress[ind];
-}
-
-QueueA::~QueueA()
-{
-	delete(startAdress);
-}
-
-
 QueueA& QueueA::operator=(const QueueA& rhs)
 {
-	if (this != &rhs)
+	if (!rhs.empty)
 	{
-		len = rhs.len;
-		allocatedMemory = len;
-		startAdress = new double[allocatedMemory];
-		std::copy(rhs.startAdress, rhs.startAdress + len, startAdress);
+		allocatedMemory = rhs.allocatedMemory;
+		head = rhs.head;
+		tail = rhs.tail;
+		if (startAdress != nullptr)
+		{
+			delete(startAdress);
+		}
+		startAdress = new uint8_t[allocatedMemory];
+		std::copy(rhs.startAdress, rhs.startAdress + allocatedMemory, startAdress);
+		empty = false;
 	}
 	return *this;
 }
 QueueA& QueueA::operator=(QueueA&& rhs) noexcept
 {
-	if (this != &rhs)
+	if (!rhs.empty)
 	{
-		std::swap(len, rhs.len);
 		std::swap(allocatedMemory, rhs.allocatedMemory);
-		startAdress = rhs.startAdress;
-		rhs.startAdress = nullptr;
+		std::swap(head, rhs.head);
+		std::swap(tail, rhs.tail);
+		std::swap(startAdress, rhs.startAdress);
+		std::swap(empty, rhs.empty);
 	}
 	return *this;
+}
+
+void QueueA::Push(const uint8_t value)
+{
+	if (allocatedMemory == 0)
+	{
+		if (startAdress != nullptr)
+		{
+			delete(startAdress);
+			startAdress = nullptr;
+		}
+		startAdress = new uint8_t[8];
+		startAdress[0] = value;
+		tail = 0;
+		head = 0;
+		allocatedMemory = 8;
+	}
+	else if (tail + 1 == head)
+	{
+		uint8_t* temp = new uint8_t[allocatedMemory*2];
+		std::copy(startAdress, &startAdress[tail + 1], &temp[allocatedMemory - head]);
+		std::copy(&startAdress[head], startAdress + allocatedMemory, temp);
+		std::memset(&temp[allocatedMemory + 1], 0.0, (allocatedMemory));
+		head = 0;
+		tail = allocatedMemory;
+		temp[tail] = value;
+		startAdress = temp;
+		allocatedMemory *= 2;
+	}
+	else if (tail == allocatedMemory - 1 && head == 0)
+	{
+		uint8_t* temp = new uint8_t[allocatedMemory * 2];
+		std::copy(startAdress, startAdress + allocatedMemory, temp);
+		std::memset(&temp[allocatedMemory], 0, allocatedMemory);
+		head = 0;
+		tail = allocatedMemory;
+		temp[tail] = value;
+		startAdress = temp;
+		allocatedMemory *= 2;
+	}
+	else
+	{
+		tail++;
+		tail = tail % allocatedMemory;
+		startAdress[tail] = value;
+	}
+	empty = false;
+}
+void QueueA::Pop() noexcept
+{
+	if (!empty)
+	{
+		startAdress[head] = 0;
+		head++;
+		head = head % allocatedMemory;
+		if (head - 1 == tail)
+		{
+			Clear();
+		}
+	}
+}
+bool QueueA::IsEmpty() const noexcept
+{
+	return empty;
+}
+void QueueA::Clear() noexcept
+{
+	if (startAdress != nullptr)
+	{
+		delete(startAdress);
+		startAdress = nullptr;
+	}
+	allocatedMemory = 0;
+	head = 0;
+	tail = 0;
+	empty = true;
+}
+uint8_t& QueueA::Top()
+{
+	if (empty)
+	{
+		throw std::out_of_range("Can not find a head. Queue is empty");
+	}
+	return startAdress[head];
+}
+
+QueueA::~QueueA()
+{
+
+}
+
+void QueueA::print()
+{
+	for (int i = 0; i < allocatedMemory; i++)
+	{
+		std::cout << std::to_string(startAdress[i]) << "\n";
+	}
 }

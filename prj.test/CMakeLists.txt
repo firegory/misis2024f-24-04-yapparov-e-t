@@ -14,6 +14,10 @@ project("stackl")
 add_executable("stackl_doctest" "stackl_doctest.cpp")
 target_link_libraries(stackl_doctest stackl)
 
+project("queuea")
+add_executable("queuea_doctest" "queuea_doctest.cpp")
+target_link_libraries(queuea_doctest queuea)
+
 project("comlpex_test")
 add_executable("complex_doctest" "complex_doctest.cpp")
 target_link_libraries(complex_doctest complex)

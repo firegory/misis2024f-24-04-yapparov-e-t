@@ -12,7 +12,8 @@ private:
     ptrdiff_t allocatedMemory = 0;
     ptrdiff_t head = 0;
     ptrdiff_t tail = 0;
-    uint8_t* startAdress;
+    uint8_t* startAdress = nullptr;
+    bool empty = true;
 public:
     QueueA() = default;
     QueueA(const QueueA & obj);
@@ -28,6 +29,8 @@ public:
     uint8_t& Top();
 
     ~QueueA();
+
+    void print();
 };
 
 
