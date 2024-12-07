@@ -220,15 +220,7 @@ Rational& Rational::operator/=(const Rational& rhs)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    Rational t(0,1);
-    if (rhs.numerator < 0)
-    {
-        t = Rational(-1 * rhs.denominator, -1 * rhs.numerator);
-    }
-    else
-    {
-        t = Rational(rhs.denominator, rhs.numerator);
-    }
+    Rational t = Rational(rhs.denominator, rhs.numerator);
     *this *= t;
     return *this;
 }
@@ -291,8 +283,7 @@ bool operator!=(const int32_t& lhs, const Rational& rhs) noexcept
 
 bool Rational::operator>(const Rational& rhs) const noexcept
 {
-    int32_t gcd = greatestCommonDivisor(denominator, rhs.denominator);
-    if (numerator * rhs.denominator / gcd > rhs.numerator * denominator / gcd)
+    if (numerator * rhs.denominator > rhs.numerator * denominator)
     {
         return true;
     }
