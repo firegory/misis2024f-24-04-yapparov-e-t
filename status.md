@@ -1,8 +1,11 @@
-STAMP: 20241206-193206
+STAMP: 20241210-064516
 OK: file codeforces.id is correct
+ERROR: file prj.test/queue_doctest.cpp is absent
 OK: CMake generator successed
 OK: folder prj.codeforces structure is correct
 STATUS: lab complex - test-ok
 STATUS: lab rational - test-failed
 STATUS: lab arrayd - test-ok
 STATUS: lab arrayt - test-ok
+ERROR: lab stackl - test build failed
+ERROR: lab queuea - test build failed
