@@ -31,6 +31,7 @@ public:
     bool IsEmpty() const noexcept;
     void Clear() noexcept;
     uint8_t& Top();
+    const uint8_t& Top() const;
 
     ~StackL();
 };

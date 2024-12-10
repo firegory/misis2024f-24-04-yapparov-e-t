@@ -81,6 +81,14 @@ uint8_t& StackL::Top()
 	}
 	return head->value;
 }
+const uint8_t& StackL::Top() const
+{
+	if (head == nullptr)
+	{
+		throw std::out_of_range("Can not find a head. Satck is empty");
+	}
+	return head->value;
+}
 
 StackL::~StackL()
 {

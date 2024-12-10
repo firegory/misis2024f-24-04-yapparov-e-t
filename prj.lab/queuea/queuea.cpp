@@ -146,6 +146,14 @@ uint8_t& QueueA::Top()
 	}
 	return startAdress[head];
 }
+const uint8_t& QueueA::Top() const
+{
+	if (empty)
+	{
+		throw std::out_of_range("Can not find a head. Queue is empty");
+	}
+	return startAdress[head];
+}
 
 QueueA::~QueueA()
 {
