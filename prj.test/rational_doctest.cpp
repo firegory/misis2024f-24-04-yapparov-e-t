@@ -17,7 +17,9 @@ TEST_CASE("[Rational] - ctor") {
 TEST_CASE("[Rational] - input output") {
 	CHECK(testOutput("11/22"));
 	CHECK(testOutput("-11/22"));
-
+	
+	CHECK(!testOutput("11;22"));
+	CHECK(!testOutput("11.22"));
 	CHECK(!testOutput("11 /22"));
 	CHECK(!testOutput("11/ 22"));
 	CHECK(!testOutput("11/-22"));

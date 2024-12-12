@@ -11,6 +11,7 @@ private:
     int32_t numerator = 0;
     int32_t denominator = 1;
 
+    void normalize();
     static const char sep = '/';
 public:
     Rational() = default;

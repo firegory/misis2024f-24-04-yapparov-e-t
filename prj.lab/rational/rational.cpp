@@ -6,7 +6,9 @@
 #include<cstdint>
 
 
-int32_t greatestCommonDivisor(int32_t a, int32_t b) {
+void Rational::normalize() {
+    int32_t a = std::abs(numerator);
+    int32_t b = std::abs(denominator);
     if (a < b) {
         std::swap(a, b);
     }
@@ -16,7 +18,13 @@ int32_t greatestCommonDivisor(int32_t a, int32_t b) {
         std::swap(a, b);
     }
 
-    return a;
+    numerator /= a;
+    denominator /= a;
+    if (denominator < 0)
+    {
+        denominator *= -1;
+        numerator *= -1;
+    }
 }
 
 std::ostream& operator<<(std::ostream& ostrm, const Rational& rhs) noexcept
@@ -34,7 +42,7 @@ std::ostream& Rational::writeTo(std::ostream& ostrm) const noexcept
 }
 std::istream& Rational::readFrom(std::istream& istrm) noexcept
 {
-    char sep = ' ';
+    char sepT = ' ';
     int32_t num = 0;
     int32_t den = 0;
     bool minus = false;
@@ -53,7 +61,7 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     {
         num *= -1; minus = false;
     }
-    sep = istrm.get();
+    sepT = istrm.get();
     if (istrm.peek() == '-')
     {
         minus = true;
@@ -69,7 +77,7 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     {
         den *= -1; minus = false;
     }
-    if (Rational::sep == sep && den > 0)
+    if (Rational::sep == sepT && den > 0)
     {
         *this = Rational(num, den);
         if (!istrm.good())
@@ -94,17 +102,9 @@ Rational::Rational(const int32_t num, const int32_t den)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    int32_t gcd = greatestCommonDivisor(abs(num), abs(den));
-    if (den < 0)
-    {
-        numerator = num / gcd * -1;
-        denominator = den / gcd * -1;
-    }
-    else
-    {
-        numerator = num / gcd;
-        denominator = den / gcd;
-    }
+    numerator = num;
+    denominator = den;
+    normalize();
 }
 int32_t Rational::num()
 {
@@ -122,10 +122,10 @@ Rational Rational::operator-() const noexcept
 
 Rational& Rational::operator+=(const Rational& rhs) noexcept
 {
-    int32_t gcd = greatestCommonDivisor(denominator, rhs.denominator);
-    numerator *= rhs.denominator / gcd;
-    numerator += rhs.numerator * denominator / gcd;
-    denominator *= rhs.denominator / gcd;
+    numerator *= rhs.denominator;
+    numerator += rhs.numerator * denominator;
+    denominator *= rhs.denominator;
+    normalize();
     return *this;
 }
 Rational& Rational::operator+=(const int32_t rhs)  noexcept
@@ -185,9 +185,7 @@ Rational& Rational::operator*=(const Rational& rhs) noexcept
 {
     numerator *= rhs.numerator;
     denominator *= rhs.denominator;
-    int32_t gcd = greatestCommonDivisor(abs(numerator), denominator);
-    numerator /= gcd;
-    denominator /= gcd;
+    normalize();
     return *this;
 }
 Rational& Rational::operator*=(const int32_t rhs) noexcept
@@ -220,8 +218,9 @@ Rational& Rational::operator/=(const Rational& rhs)
     {
         throw std::overflow_error("Divide by zero exception");
     }
-    Rational t = Rational(rhs.denominator, rhs.numerator);
-    *this *= t;
+    numerator *= rhs.denominator;
+    denominator *= rhs.numerator;
+    normalize();
     return *this;
 }
 Rational& Rational::operator/=(const int32_t rhs)

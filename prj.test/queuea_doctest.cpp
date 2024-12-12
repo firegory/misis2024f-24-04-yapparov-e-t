@@ -89,7 +89,6 @@ TEST_CASE("[QueueA]") {
 		queue1.Push(i % 256);
 	}
 	queue2 = QueueA(std::move(queue1));
-	queue1.print();
 	for (size_t i = 1; i < 1000; i++)
 	{
 		CHECK(queue2.Top() == i % 256);

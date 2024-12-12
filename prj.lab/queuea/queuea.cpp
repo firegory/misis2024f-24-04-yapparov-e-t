@@ -114,11 +114,14 @@ void QueueA::Pop() noexcept
 	if (!empty)
 	{
 		startAdress[head] = 0;
-		head++;
-		head = head % allocatedMemory;
-		if (head - 1 == tail)
+		if (head == tail)
 		{
 			Clear();
+		}
+		else
+		{
+			head++;
+			head = head % allocatedMemory;
 		}
 	}
 }

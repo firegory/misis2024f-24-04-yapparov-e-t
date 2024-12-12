@@ -21,13 +21,13 @@ std::ostream& Complex::writeTo(std::ostream& ostrm) const noexcept
 }
 std::istream& Complex::readFrom(std::istream& istrm) noexcept
 {
-    char start = ' ';
-    char sep = ' ';
-    char end = ' ';
+    char startT = ' ';
+    char sepT = ' ';
+    char endT = ' ';
     bool minus = false;
     double real = 0;
     double imaginary = 0;
-    start = istrm.get();
+    startT = istrm.get();
     if (istrm.peek() == '-')
     {
         minus = true;
@@ -43,7 +43,7 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     {
         real *= -1; minus = false;
     }
-    sep = istrm.get();
+    sepT = istrm.get();
     if (istrm.peek() == '-')
     {
         minus = true;
@@ -59,10 +59,10 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     {
         real *= -1; minus = false;
     }
-    end = istrm.get();
+    endT = istrm.get();
     if (istrm.good())
     {
-        if (Complex::start == start && Complex::sep == sep && Complex::end == end)
+        if (Complex::start == startT && Complex::sep == sepT && Complex::end == endT)
         {
             re = real;
             im = imaginary;

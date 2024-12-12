@@ -37,7 +37,7 @@ struct Complex
     double im = 0.0;
 
     static const char start = '{';
-    static const char sep = ';';
+    static const char sep = ',';
     static const char end = '}';
 };
 
