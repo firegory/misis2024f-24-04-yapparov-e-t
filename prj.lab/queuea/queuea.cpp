@@ -48,6 +48,10 @@ QueueA& QueueA::operator=(const QueueA& rhs)
 		std::copy(rhs.startAdress, rhs.startAdress + allocatedMemory, startAdress);
 		empty = false;
 	}
+	else
+	{
+		Clear();
+	}
 	return *this;
 }
 QueueA& QueueA::operator=(QueueA&& rhs) noexcept
@@ -59,6 +63,10 @@ QueueA& QueueA::operator=(QueueA&& rhs) noexcept
 		std::swap(tail, rhs.tail);
 		std::swap(startAdress, rhs.startAdress);
 		std::swap(empty, rhs.empty);
+	}
+	else
+	{
+		Clear();
 	}
 	return *this;
 }
