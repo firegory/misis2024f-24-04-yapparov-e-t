@@ -61,7 +61,15 @@ std::istream& Rational::readFrom(std::istream& istrm) noexcept
     {
         num *= -1; minus = false;
     }
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
+    }
     sepT = istrm.get();
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
+    }
     if (istrm.peek() == '-')
     {
         minus = true;

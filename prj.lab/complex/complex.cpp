@@ -28,6 +28,10 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     double real = 0;
     double imaginary = 0;
     startT = istrm.get();
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
+    }
     if (istrm.peek() == '-')
     {
         minus = true;
@@ -43,7 +47,15 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     {
         real *= -1; minus = false;
     }
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
+    }
     sepT = istrm.get();
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
+    }
     if (istrm.peek() == '-')
     {
         minus = true;
@@ -58,6 +70,10 @@ std::istream& Complex::readFrom(std::istream& istrm) noexcept
     if (minus)
     {
         real *= -1; minus = false;
+    }
+    if (istrm.peek() == ' ')
+    {
+        istrm.get();
     }
     endT = istrm.get();
     if (istrm.good())
