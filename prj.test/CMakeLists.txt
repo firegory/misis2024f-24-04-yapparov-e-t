@@ -18,6 +18,10 @@ project("queuea")
 add_executable("queuea_doctest" "queuea_doctest.cpp")
 target_link_libraries(queuea_doctest queuea)
 
+project("chocker")
+add_executable("chocker_doctest" "chocker_doctest.cpp")
+target_link_libraries(chocker_doctest chocker)
+
 project("comlpex_test")
 add_executable("complex_doctest" "complex_doctest.cpp")
 target_link_libraries(complex_doctest complex)

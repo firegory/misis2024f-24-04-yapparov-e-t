@@ -1,1 +1,1 @@
-add_executable("Chocker" "chocker.cpp")
+add_library(chocker chocker.cpp chocker.hpp)
