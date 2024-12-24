@@ -12,6 +12,8 @@ public:
 	ptrdiff_t size = 0;
 	ptrdiff_t allocatedMemory = 0;
 
+	~Node();
+
 	Node() = default;
 	explicit Node(const ptrdiff_t length);
 	Node(const Node& obj);
@@ -39,6 +41,8 @@ public:
 	Chocker(const Chocker& obj);
 	Chocker(Chocker&& obj) noexcept;
 
+	~Chocker();
+	
 	[[nodiscard]] Chocker& operator=(const Chocker& obj);
 	[[nodiscard]] Chocker& operator=(Chocker&& obj) noexcept;
 

@@ -25,6 +25,11 @@ Node::Node(Node&& obj) noexcept
 	std::swap(startAdress, obj.startAdress);
 }
 
+Node::~Node()
+{
+	delete(startAdress);
+}
+
 Node& Node::operator=(const Node& obj)
 {		
 	size = obj.size;
@@ -124,6 +129,11 @@ Chocker::Chocker(Chocker&& obj) noexcept
 {
 	std::swap(size, obj.size);
 	std::swap(startAdress, obj.startAdress);
+}
+
+Chocker::~Chocker()
+{
+	delete(startAdress);
 }
 
 Chocker& Chocker::operator=(const Chocker& obj)
